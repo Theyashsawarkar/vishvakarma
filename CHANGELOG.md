@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in kaushal/__init__.py.
 
+## v0.2.2 -- 2026-11-02
+
+- Fixed the tests after darshan joined (v0.2.1 failed CI, nothing else changed).
+
 ## v0.2.1 -- 2026-11-02
 
 - darshan joins the MCP servers: agents can show you a file and hear what you ask about it.
