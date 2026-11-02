@@ -1,4 +1,4 @@
-"""What kaushal does, as data: the command line prints it, the app shows it."""
+"""What vishvakarma does, as data: the command line prints it, the app shows it."""
 import json
 import os
 import select
@@ -100,7 +100,7 @@ class Result:
 
 
 def sync(dry: bool = False, take_back: bool = False, only: str | None = None) -> tuple[list[Result], Wanted]:
-    """Gives every agent (or only the target whose key is `only`) what kaushal has; take_back removes it."""
+    """Gives every agent (or only the target whose key is `only`) what vishvakarma has; take_back removes it."""
     w = wanted()
     sk, sv = ([], []) if take_back else (w.skills, w.servers)
     state = load_state()
@@ -122,7 +122,7 @@ def sync(dry: bool = False, take_back: bool = False, only: str | None = None) ->
 
 
 def diagnose() -> tuple[list[str], list[str], str]:
-    """(notes, problems, summary): what `kaushal doctor` reports."""
+    """(notes, problems, summary): what `vishvakarma doctor` reports."""
     results, w = sync(dry=True)
     problems = [f"skill {s.name}: {p}" for s in w.all_skills for p in s.problems]
     problems += [f"server {s.name}: `{s.command}` isn't installed" for s in w.missing]
@@ -134,10 +134,10 @@ def diagnose() -> tuple[list[str], list[str], str]:
         label = f"{r.target.agent.label} ({short(r.target.path)})"
         if r.error:
             problems.append(f"{label}: {r.error}")
-        # Yours winning over kaushal's is how it should be: a note, not a fault.
+        # Yours winning over vishvakarma's is how it should be: a note, not a fault.
         notes += [f"{label}: {c}" for c in r.changes if c.startswith("skip ")]
         if r.pending:
-            problems.append(f"{label}: out of date ({'; '.join(r.pending)}); run `kaushal sync`")
+            problems.append(f"{label}: out of date ({'; '.join(r.pending)}); run `vishvakarma sync`")
     agents = sorted({r.target.agent.label for r in results}, key=[a.label for a in ALL].index)
     summary = f"{len(w.skills)} skill(s) and {len(w.servers)} server(s) in every agent: " + ", ".join(agents)
     return notes, problems, summary
@@ -147,7 +147,7 @@ def diagnose() -> tuple[list[str], list[str], str]:
 
 def probe(server: Server, timeout: float = 15.0) -> tuple[bool, str, list[str]]:
     """Starts the MCP server, does the handshake and lists its tools: (ok, message, tool names)."""
-    cmd, args, env = server.for_agent("kaushal")
+    cmd, args, env = server.for_agent("vishvakarma")
     path = which(cmd)
     if not path:
         return False, f"`{cmd}` isn't installed", []
@@ -181,7 +181,7 @@ def probe(server: Server, timeout: float = 15.0) -> tuple[bool, str, list[str]]:
 
         send({"jsonrpc": "2.0", "id": 1, "method": "initialize",
               "params": {"protocolVersion": "2025-06-18", "capabilities": {},
-                         "clientInfo": {"name": "kaushal", "version": VERSION}}})
+                         "clientInfo": {"name": "vishvakarma", "version": VERSION}}})
         info = answer(1)
         send({"jsonrpc": "2.0", "method": "notifications/initialized"})
         send({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})

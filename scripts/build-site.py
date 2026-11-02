@@ -29,7 +29,7 @@ FAMILY = [
               ("sandesh", "संदेश", "mail and chat in the terminal"), ("pattan", "पत्तन", "ports and tunnels"),
               ("nauka", "नौका", "Docker in the terminal"), ("prasar", "प्रसार", "posts to X and LinkedIn"),
               ("anumati", "अनुमति", "commands for AI agents, approved"), ("pramana", "प्रमाण", "password prompts"),
-              ("vesha", "वेष", "Claude Code accounts"), ("kaushal", "कौशल", "skills for every AI agent"),
+              ("vesha", "वेष", "Claude Code accounts"), ("vishvakarma", "विश्वकर्मा", "skills for every AI agent"),
               ("ekatva", "एकत्व", "phone and laptop, linked"), ("varna", "वर्ण", "theme engine"),
               ("vinyasa", "विन्यास", "settings")]),
     ("Vyom", [("vyom", "व्योम", "panels runtime")]),

@@ -1,6 +1,15 @@
 # Changelog
 
-Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in kaushal/__init__.py.
+Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
+
+## v0.3.0 -- 2026-11-02
+
+- **Renamed from kaushal to vishvakarma** (विश्वकर्मा, the divine craftsman). The
+  command is `vishvakarma`, the repository
+  github.com/Theyashsawarkar/vishvakarma (the old address redirects), the
+  service `vishvakarma.service`. The first run moves your skills and settings
+  (`~/.config/kaushal`) to `~/.config/vishvakarma`; Vayu's MCP servers it hands
+  to agents carry their new names too (narada, vaikhari, dvarapala).
 
 ## v0.2.2 -- 2026-11-02
 

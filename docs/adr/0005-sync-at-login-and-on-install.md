@@ -9,11 +9,11 @@ Skills and tools should be in every agent in every session without the user doin
 
 ## Decision
 
-`kaushal sync` runs:
+`vishvakarma sync` runs:
 
-- at every login, from `kaushal.service` (a oneshot user unit; Vayu starts it with the session's other units);
+- at every login, from `vishvakarma.service` (a oneshot user unit; Vayu starts it with the session's other units);
 - on install and on every update, from `install.sh` and kosha's `reload`;
-- whenever the user wants (`kaushal sync`), and `kaushal doctor` says when one is due.
+- whenever the user wants (`vishvakarma sync`), and `vishvakarma doctor` says when one is due.
 
 ## Consequences
 

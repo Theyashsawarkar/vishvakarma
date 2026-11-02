@@ -8,7 +8,7 @@ ROWS.json: {"date": "26/10/2026", "rows": [["11:30 AM", "01:00 PM", "Worked on .
 (date also as YYYY-MM-DD). Checks, and exits 2 listing every problem, unless:
 the rows run back to back with no gap or overlap, each ends after it starts,
 the day starts at --start and ends at --end when given, and the lunch break
-from ~/.config/kaushal/dsr.toml (default 01:00 PM to 02:00 PM) is a row of
+from ~/.config/vishvakarma/dsr.toml (default 01:00 PM to 02:00 PM) is a row of
 its own when the day spans it. Writes DIR/dsr.txt and DIR/dsr.html (DIR
 defaults to the folder of ROWS.json) and prints the table.
 """
@@ -20,7 +20,7 @@ import os
 import sys
 import tomllib
 
-CONFIG = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "kaushal", "dsr.toml")
+CONFIG = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "vishvakarma", "dsr.toml")
 TD = "border:1px solid #999;padding:6px 10px;vertical-align:top;font-family:Arial,sans-serif;font-size:14px"
 TH = TD.replace("vertical-align:top", "background:#f2f2f2;text-align:left")
 

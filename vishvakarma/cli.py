@@ -1,20 +1,20 @@
-"""kaushal's commands."""
+"""vishvakarma's commands."""
 import os
 import sys
 
 from . import VERSION, ops
-from .store import REPO, config_dir, servers, set_off, skills
+from .store import REPO, config_dir, move_former, servers, set_off, skills
 
-HELP = f"""kaushal {VERSION}: skills and tools for every AI agent on this machine
+HELP = f"""vishvakarma {VERSION}: skills and tools for every AI agent on this machine
 
-  kaushal                 what there is: skills, MCP servers, agents
-  kaushal ui              the app: every skill, tool and agent; sync, doctor, test, turn off
-  kaushal sync [-n]       give every agent all of it (-n: only say what would change)
-  kaushal doctor          check every agent has everything; exit 1 if not
-  kaushal off NAME        turn a skill or tool off for every agent (`kaushal on NAME` undoes it)
-  kaushal unsync          take back everything kaushal added
-  kaushal new NAME        start a skill of your own in {os.path.join(config_dir(), "skills")}
-  kaushal path [NAME]     where the skills (or one skill) live
+  vishvakarma                 what there is: skills, MCP servers, agents
+  vishvakarma ui              the app: every skill, tool and agent; sync, doctor, test, turn off
+  vishvakarma sync [-n]       give every agent all of it (-n: only say what would change)
+  vishvakarma doctor          check every agent has everything; exit 1 if not
+  vishvakarma off NAME        turn a skill or tool off for every agent (`vishvakarma on NAME` undoes it)
+  vishvakarma unsync          take back everything vishvakarma added
+  vishvakarma new NAME        start a skill of your own in {os.path.join(config_dir(), "skills")}
+  vishvakarma path [NAME]     where the skills (or one skill) live
 
 Skills are folders with a SKILL.md (the open Agent Skills format): Vayu's
 ship in {os.path.join(REPO, "skills")}, yours go in {os.path.join(config_dir(), "skills")}.
@@ -76,7 +76,7 @@ to them by path relative to this file.
 
 
 def new_skill(name: str) -> str:
-    """Creates ~/.config/kaushal/skills/NAME/SKILL.md from the template; returns its path."""
+    """Creates ~/.config/vishvakarma/skills/NAME/SKILL.md from the template; returns its path."""
     folder = os.path.join(config_dir(), "skills", name)
     if os.path.exists(folder):
         raise FileExistsError(f"{ops.short(folder)} already exists")
@@ -90,14 +90,14 @@ def new_skill(name: str) -> str:
 def new(name: str) -> int:
     from .store import NAME_RE
     if not NAME_RE.match(name):
-        print("kaushal: a skill's name is lowercase letters, digits and dashes", file=sys.stderr)
+        print("vishvakarma: a skill's name is lowercase letters, digits and dashes", file=sys.stderr)
         return 1
     try:
         path = new_skill(name)
     except FileExistsError as e:
-        print(f"kaushal: {e}", file=sys.stderr)
+        print(f"vishvakarma: {e}", file=sys.stderr)
         return 1
-    print(f"{ops.short(path)}: edit it, then `kaushal sync`")
+    print(f"{ops.short(path)}: edit it, then `vishvakarma sync`")
     return 0
 
 
@@ -112,7 +112,7 @@ def kind_of(name: str) -> str | None:
 def switch(name: str, is_off: bool) -> int:
     kind = kind_of(name)
     if not kind:
-        print(f"kaushal: no skill or tool called {name}", file=sys.stderr)
+        print(f"vishvakarma: no skill or tool called {name}", file=sys.stderr)
         return 1
     set_off(kind, name, is_off)
     print(f"{name} {'off' if is_off else 'on'} for every agent")
@@ -120,6 +120,7 @@ def switch(name: str, is_off: bool) -> int:
 
 
 def main(argv: list[str]) -> int:
+    move_former()
     cmd, rest = (argv[0], argv[1:]) if argv else ("", [])
     if cmd in ("-h", "--help", "help"):
         print(HELP)
@@ -149,12 +150,12 @@ def main(argv: list[str]) -> int:
         if rest:
             match = [s for s in skills() if s.name == rest[0]]
             if not match:
-                print(f"kaushal: no skill {rest[0]}", file=sys.stderr)
+                print(f"vishvakarma: no skill {rest[0]}", file=sys.stderr)
                 return 1
             print(match[0].path)
         else:
             print(os.path.join(REPO, "skills"))
             print(os.path.join(config_dir(), "skills"))
         return 0
-    print(f"kaushal: unknown command {cmd!r}\n\n{HELP}", file=sys.stderr)
+    print(f"vishvakarma: unknown command {cmd!r}\n\n{HELP}", file=sys.stderr)
     return 2

@@ -1,4 +1,4 @@
-"""What kaushal hands to agents: skills (folders with a SKILL.md) and MCP
+"""What vishvakarma hands to agents: skills (folders with a SKILL.md) and MCP
 servers (mcp.toml). Both come from the repo and from the user's own config
 folder; the user's win on a name clash, and `enabled = false` drops one.
 """
@@ -13,11 +13,20 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def config_dir() -> str:
-    return os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.join(HOME, ".config"), "kaushal")
+    return os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.join(HOME, ".config"), "vishvakarma")
 
 
 def state_dir() -> str:
-    return os.path.join(os.environ.get("XDG_STATE_HOME") or os.path.join(HOME, ".local", "state"), "kaushal")
+    return os.path.join(os.environ.get("XDG_STATE_HOME") or os.path.join(HOME, ".local", "state"), "vishvakarma")
+
+
+def move_former() -> None:
+    """vishvakarma was called kaushal up to v0.2: your skills and settings move
+    to the new name the first time the command runs. Only the command calls it."""
+    for path in (config_dir(), state_dir()):
+        old = os.path.join(os.path.dirname(path), "kaushal")
+        if not os.path.exists(path) and os.path.isdir(old) and not os.path.islink(old):
+            os.rename(old, path)
 
 
 def skill_roots() -> list[tuple[str, str]]:
@@ -147,8 +156,8 @@ def servers() -> list[Server]:
 
 
 # ------------------------------------------------------------------ off
-# Skills and servers turned off for every agent (`kaushal off NAME`, x in
-# the app): ~/.config/kaushal/off.toml, written by kaushal, yours to edit.
+# Skills and servers turned off for every agent (`vishvakarma off NAME`, x in
+# the app): ~/.config/vishvakarma/off.toml, written by vishvakarma, yours to edit.
 
 def off_file() -> str:
     return os.path.join(config_dir(), "off.toml")
@@ -163,7 +172,7 @@ def set_off(kind: str, name: str, is_off: bool) -> None:
     """Turns a skill (kind "skills") or server ("servers") off or back on."""
     current = off()
     (current[kind].add if is_off else current[kind].discard)(name)
-    lines = ["# Turned off for every agent: `kaushal on NAME` (or x in `kaushal ui`) turns one back on.",
+    lines = ["# Turned off for every agent: `vishvakarma on NAME` (or x in `vishvakarma ui`) turns one back on.",
              *(f"{k} = [{', '.join(json_str(n) for n in sorted(current[k]))}]" for k in ("skills", "servers"))]
     os.makedirs(config_dir(), exist_ok=True)
     tmp = off_file() + ".tmp"

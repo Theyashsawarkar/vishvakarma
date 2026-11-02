@@ -1,11 +1,11 @@
 """The desktop's theme, when varna (github.com/Theyashsawarkar/varna) is
-installed: its palette.json, this tool's own pick under `tools.kaushal` if it
-has one. Without varna, an empty dict and kaushal keeps its own colours."""
+installed: its palette.json, this tool's own pick under `tools.vishvakarma` if it
+has one. Without varna, an empty dict and vishvakarma keeps its own colours."""
 import json
 import os
 
 
-def colors(tool="kaushal"):
+def colors(tool="vishvakarma"):
     path = os.path.join(os.environ.get("XDG_STATE_HOME") or os.path.expanduser("~/.local/state"), "varna", "palette.json")
     try:
         with open(path) as f:

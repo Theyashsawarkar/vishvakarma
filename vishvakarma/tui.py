@@ -1,10 +1,10 @@
-"""The app (`kaushal ui`): every skill, tool and agent in one place.
+"""The app (`vishvakarma ui`): every skill, tool and agent in one place.
 
   1 2 3 Tab   Skills, Tools, Agents        j k ↓ ↑ g G   move, first, last
   Enter       read a skill / test a tool / open an agent's folder
   e c         edit a skill / its settings  n   new skill of your own
   x           turn a skill or tool off (on) for every agent
-  t           test a tool                  u   take back what kaushal added to an agent
+  t           test a tool                  u   take back what vishvakarma added to an agent
   s d         sync / doctor                /   filter    ?  keys    q Esc  quit
 """
 import curses
@@ -19,23 +19,23 @@ from . import ops, theme
 from .agents import ALL
 from .store import NAME_RE, config_dir, set_off
 
-# keybind: Kaushal/app | 1 / 2 / 3 | Switch to the Skills / Tools / Agents tab
-# keybind: Kaushal/app | Tab / Shift+Tab | Switch to the next / previous tab
-# keybind: Kaushal/app | j / k | Move down / up the list
-# keybind: Kaushal/app | g / G | Jump to the first / last item
-# keybind: Kaushal/app | Enter | Open the skill to read (a tool: test it; an agent: its folder)
-# keybind: Kaushal/app | e | Edit the skill in your editor (Vayu's: your own copy)
-# keybind: Kaushal/app | c | Edit the skill's settings (~/.config/kaushal/NAME.toml)
-# keybind: Kaushal/app | n | Create a skill of your own
-# keybind: Kaushal/app | x | Toggle the skill or tool off / on for every agent
-# keybind: Kaushal/app | t | Run a test of the tool (start it, list its tools)
-# keybind: Kaushal/app | u | Take back what kaushal added to the agent (asks)
-# keybind: Kaushal/app | s | Run a sync of every agent now
-# keybind: Kaushal/app | d | Run doctor (check every agent has everything)
-# keybind: Kaushal/app | / | Search the list (Esc clears)
-# keybind: Kaushal/app | r | Reload from disk
-# keybind: Kaushal/app | ? | Show all keys
-# keybind: Kaushal/app | q / Esc | Quit the app
+# keybind: Vishvakarma/app | 1 / 2 / 3 | Switch to the Skills / Tools / Agents tab
+# keybind: Vishvakarma/app | Tab / Shift+Tab | Switch to the next / previous tab
+# keybind: Vishvakarma/app | j / k | Move down / up the list
+# keybind: Vishvakarma/app | g / G | Jump to the first / last item
+# keybind: Vishvakarma/app | Enter | Open the skill to read (a tool: test it; an agent: its folder)
+# keybind: Vishvakarma/app | e | Edit the skill in your editor (Vayu's: your own copy)
+# keybind: Vishvakarma/app | c | Edit the skill's settings (~/.config/vishvakarma/NAME.toml)
+# keybind: Vishvakarma/app | n | Create a skill of your own
+# keybind: Vishvakarma/app | x | Toggle the skill or tool off / on for every agent
+# keybind: Vishvakarma/app | t | Run a test of the tool (start it, list its tools)
+# keybind: Vishvakarma/app | u | Take back what vishvakarma added to the agent (asks)
+# keybind: Vishvakarma/app | s | Run a sync of every agent now
+# keybind: Vishvakarma/app | d | Run doctor (check every agent has everything)
+# keybind: Vishvakarma/app | / | Search the list (Esc clears)
+# keybind: Vishvakarma/app | r | Reload from disk
+# keybind: Vishvakarma/app | ? | Show all keys
+# keybind: Vishvakarma/app | q / Esc | Quit the app
 
 PALETTE = {  # Catppuccin Mocha, as curses colour numbers 16+ (vesha's, so the family matches)
     "text": (205, 214, 244), "sub": (166, 173, 200), "dim": (127, 132, 156), "faint": (69, 71, 90),
@@ -57,7 +57,7 @@ HELP = [
     ("Skills", [("Enter", "read it"), ("e", "edit it (Vayu's: your copy)"), ("c", "edit its settings"),
                 ("n", "new skill of your own"), ("x", "off / on for every agent")]),
     ("Tools", [("Enter t", "test: start it, list its tools"), ("x", "off / on for every agent")]),
-    ("Agents", [("Enter", "open its folder"), ("u", "take back kaushal's things")]),
+    ("Agents", [("Enter", "open its folder"), ("u", "take back vishvakarma's things")]),
     ("Everywhere", [("s", "sync every agent"), ("d", "doctor"), ("r", "reload"), ("?", "these keys"), ("q Esc", "quit")]),
 ]
 
@@ -244,7 +244,7 @@ class App:
         self.scr.erase()
         h, w = self.scr.getmaxyx()
         if h < 18 or w < 76:
-            self.put(0, 0, "kaushal needs a bigger window (76×18)", self.a("yellow", True))
+            self.put(0, 0, "vishvakarma needs a bigger window (76×18)", self.a("yellow", True))
             self.scr.refresh()
             return
         with self.lock:
@@ -267,8 +267,8 @@ class App:
 
     def draw_strip(self, w):
         self.box(0, 0, 3, w)
-        x = self.put(1, 2, "kaushal", self.a("yellow", True))
-        x = self.put(1, x + 1, "कौशल", self.a("dim")) + 3
+        x = self.put(1, 2, "vishvakarma", self.a("yellow", True))
+        x = self.put(1, x + 1, "विश्वकर्मा", self.a("dim")) + 3
         counts = {"skills": len(self.w.all_skills), "tools": len(self.w.all_servers),
                   "agents": len([r for r in self.results if r.target.agent.key != "agents"])}
         for tab in TABS:
@@ -334,7 +334,7 @@ class App:
     def cells(self, item):
         if self.tab == "skills":
             if item is None:
-                return [("+ new skill", "dim"), ("", "dim"), ("", "dim"), ("n starts one in ~/.config/kaushal/skills", "dim")]
+                return [("+ new skill", "dim"), ("", "dim"), ("", "dim"), ("n starts one in ~/.config/vishvakarma/skills", "dim")]
             off = item.name in self.w.off["skills"]
             n = sum(self.has_skill(r, item.name) for r in self.results)
             agents = ("✗ broken", "red") if item.problems else ("off", "dim") if off else \
@@ -384,7 +384,7 @@ class App:
         if s is None:
             self.box(y, x, h, w, [("new skill", "yellow")])
             yy = self.wrap(y + 2, cx, cw, "A skill is a folder with a SKILL.md: a description saying what it does and when to use "
-                           "it, then the steps. n names one; kaushal creates it from a template in ~/.config/kaushal/skills, "
+                           "it, then the steps. n names one; vishvakarma creates it from a template in ~/.config/vishvakarma/skills, "
                            "opens it in your editor, and gives it to every agent.", self.a("sub"), bottom)
             self.keys_block(yy + 1, cx, cw, bottom, [("n", "new skill"), ("Enter", "the same")])
             return
@@ -468,7 +468,7 @@ class App:
         if item.error:
             yy = self.wrap(yy, cx, cw, item.error, self.a("red"), bottom)
         owned = self.state.get(t.key, {})
-        yy = self.section(yy, cx, cw, "kaushal added")
+        yy = self.section(yy, cx, cw, "vishvakarma added")
         for k, label in (("skills", "skills"), ("mcp", "tools")):
             names = owned.get(k, [])
             self.put(yy, cx, label, self.a("dim"))
@@ -482,7 +482,7 @@ class App:
                 self.put(yy, cx, ("· " if c.startswith("skip ") else "→ ") + c, self.a("dim" if c.startswith("skip ") else "peach"), cw)
                 yy += 1
         self.keys_block(yy + 1, cx, cw, bottom, [("s", "sync every agent"), ("Enter", "open its folder"),
-                                                 ("u", "take back what kaushal added here")])
+                                                 ("u", "take back what vishvakarma added here")])
 
     def statusline(self):
         h, w = self.scr.getmaxyx()
@@ -531,7 +531,7 @@ class App:
         for title, rows in HELP:
             lines.append((title.upper(), "peach"))
             lines += [(f"  {k:<11} {d}", "text") for k, d in rows]
-        self.panel("Keys", lines, "? or Esc closes · kaushal help lists the commands")
+        self.panel("Keys", lines, "? or Esc closes · vishvakarma help lists the commands")
 
     def toast(self, msg, kind="ok"):
         self.toast_msg, self.toast_at, self.toast_kind = msg, time.time(), kind
@@ -576,7 +576,7 @@ class App:
             lines = [("✓ " + summary, "green")] if not problems else []
             lines += [("✗ " + p, "red") for p in problems] + [("· " + n, "dim") for n in notes]
             lines += [("– " + a.label + ": not installed (set up by the next sync once it is)", "dim") for a in self.absent]
-            self.overlay = ("kaushal doctor", lines)
+            self.overlay = ("vishvakarma doctor", lines)
         self.background("checking every agent", ops.diagnose, done)
 
     def act_test(self, s):
@@ -614,9 +614,9 @@ class App:
 
         def yes():
             self.background(f"taking back from {item.target.agent.label}", lambda: ops.sync(take_back=True, only=item.target.key),
-                            lambda res: self.toast(f"took back kaushal's things from {item.target.agent.label} "
+                            lambda res: self.toast(f"took back vishvakarma's things from {item.target.agent.label} "
                                                    f"({item.target.where}); s gives them back", "warn"))
-        self.ask(f"Take back every skill and tool kaushal added to {item.target.agent.label} ({item.target.where})?", yes)
+        self.ask(f"Take back every skill and tool vishvakarma added to {item.target.agent.label} ({item.target.where})?", yes)
 
     def act_new(self):
         def create(name):
@@ -650,7 +650,7 @@ class App:
             self.outside([editor(), os.path.join(dst, "SKILL.md")])
             self.reload()
             self.act_sync()
-        self.ask(f"{s.name} is Vayu's: make your own copy in ~/.config/kaushal/skills (it replaces Vayu's) and edit that?", copy)
+        self.ask(f"{s.name} is Vayu's: make your own copy in ~/.config/vishvakarma/skills (it replaces Vayu's) and edit that?", copy)
 
     def act_settings(self, s):
         if s is None:

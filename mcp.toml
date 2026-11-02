@@ -1,6 +1,6 @@
-# Vayu's MCP servers, given to every agent `kaushal sync` finds (only the
+# Vayu's MCP servers, given to every agent `vishvakarma sync` finds (only the
 # ones whose command is installed). Add or override yours in
-# ~/.config/kaushal/mcp.toml; `enabled = false` leaves one out.
+# ~/.config/vishvakarma/mcp.toml; `enabled = false` leaves one out.
 # "{agent}" in args or env becomes the agent's name (claude, codex, ...).
 
 [servers.anumati]

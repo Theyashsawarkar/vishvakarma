@@ -1,4 +1,4 @@
-"""kaushal's newer pieces: turning things off, testing a tool, taking back one agent, and the app starting."""
+"""vishvakarma's newer pieces: turning things off, testing a tool, taking back one agent, and the app starting."""
 import os
 import pty
 import select
@@ -10,7 +10,7 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from test_kaushal import Home  # noqa: E402
+from test_vishvakarma import Home  # noqa: E402
 
 FAKE_MCP = '''#!/usr/bin/env python3
 import json, sys
@@ -56,8 +56,8 @@ class Probe(unittest.TestCase):
         with open(os.path.join(h.bin, "fakemcp"), "w") as f:
             f.write(FAKE_MCP)
         os.chmod(os.path.join(h.bin, "fakemcp"), 0o755)
-        h.write(".config/kaushal/mcp.toml", '[servers.fake]\ncommand = "fakemcp"\n')
-        out = self.run_py(h, "from kaushal import ops, store\n"
+        h.write(".config/vishvakarma/mcp.toml", '[servers.fake]\ncommand = "fakemcp"\n')
+        out = self.run_py(h, "from vishvakarma import ops, store\n"
                              "s = [x for x in store.servers() if x.name == 'fake'][0]\nprint(ops.probe(s))")
         self.assertIn("True", out)
         self.assertIn("['ping', 'pong']", out)
@@ -67,8 +67,8 @@ class Probe(unittest.TestCase):
         with open(os.path.join(h.bin, "silent"), "w") as f:
             f.write("#!/bin/sh\nsleep 30\n")
         os.chmod(os.path.join(h.bin, "silent"), 0o755)
-        h.write(".config/kaushal/mcp.toml", '[servers.silent]\ncommand = "silent"\n')
-        out = self.run_py(h, "from kaushal import ops, store\n"
+        h.write(".config/vishvakarma/mcp.toml", '[servers.silent]\ncommand = "silent"\n')
+        out = self.run_py(h, "from vishvakarma import ops, store\n"
                              "s = [x for x in store.servers() if x.name == 'silent'][0]\nprint(ops.probe(s, timeout=1))")
         self.assertIn("False", out)
         self.assertIn("no answer", out)
@@ -79,7 +79,7 @@ class TakeBackOne(unittest.TestCase):
         h = Home()
         os.makedirs(h.path(".claude"))
         h.run("sync")
-        out = Probe.run_py(self, h, "from kaushal import ops\nt = [t for t in ops.targets() if t.agent.key == 'claude'][0]\n"
+        out = Probe.run_py(self, h, "from vishvakarma import ops\nt = [t for t in ops.targets() if t.agent.key == 'claude'][0]\n"
                                     "ops.sync(take_back=True, only=t.key)")
         self.assertEqual(out, "")
         self.assertEqual(h.json(".claude.json")["mcpServers"], {})
@@ -94,7 +94,7 @@ class App(unittest.TestCase):
         if pid == 0:
             os.environ.update({"HOME": h.dir, "PATH": f"{h.bin}:/usr/bin:/bin", "TERM": "xterm-256color",
                                "LINES": "40", "COLUMNS": "140"})
-            os.execv(sys.executable, [sys.executable, os.path.join(ROOT, "bin", "kaushal"), "ui"])
+            os.execv(sys.executable, [sys.executable, os.path.join(ROOT, "bin", "vishvakarma"), "ui"])
         import fcntl
         import struct
         import termios

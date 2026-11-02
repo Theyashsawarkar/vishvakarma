@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Builds kaushal's website: the family's scripts/build-site.py (shared by
-every Vayu tool, so not changed here) plus what only kaushal has, its
+"""Builds vishvakarma's website: the family's scripts/build-site.py (shared by
+every Vayu tool, so not changed here) plus what only vishvakarma has, its
 skills:
 
 - the README's "Vayu's skills" list, regenerated from skills/ (between the
@@ -23,13 +23,13 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from kaushal.store import load_skill  # noqa: E402
+from vishvakarma.store import load_skill  # noqa: E402
 
 spec = importlib.util.spec_from_file_location("build_site", os.path.join(ROOT, "scripts", "build-site.py"))
 site = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(site)
 
-GH = f"{site.GH}/kaushal"
+GH = f"{site.GH}/vishvakarma"
 BEGIN, END = "<!-- skills: written by scripts/site.py from skills/ -->", "<!-- /skills -->"
 
 
@@ -53,7 +53,8 @@ def readme_list(found) -> str:
     cell = lambda t: t.replace("|", "\\|")
     rows = "\n".join(f"| [`{s.name}`](skills/{s.name}/SKILL.md) | {cell(s.description)} |" for s, _, _ in found)
     return (f"{BEGIN}\n{len(found)} skill{'s, each' if len(found) != 1 else ','} with its full instructions on the "
-            f"[Skills page](https://theyashsawarkar.github.io/kaushal/skills/):\n\n| Skill | What it does, and when an agent uses it |\n"
+            f"[Skills page](https://theyashsawarkar.github.io/vishvakarma/skills/):\n\n"
+            "| Skill | What it does, and when an agent uses it |\n"
             f"|---|---|\n{rows}\n{END}")
 
 
@@ -88,20 +89,20 @@ def skill_pages(meta, found) -> dict[str, bytes]:
         head = (f'<p class="n"><a href="index.html">← All skills</a></p>'
                 f'<h2><code>{html.escape(s.name)}</code></h2><p class="lead">{html.escape(s.description)}</p>'
                 f'<blockquote><p><b>Use it</b>: ask any agent in your own words. It picks this skill by the description '
-                f'above, opens these instructions and follows them. Already in every agent kaushal syncs.</p></blockquote>'
+                f'above, opens these instructions and follows them. Already in every agent vishvakarma syncs.</p></blockquote>'
                 f"<h3>Files</h3>{files_list(s, files)}")
         doc = site.markdown(body, link, None, 1)
-        pages[f"skills/{s.name}.html"] = site.page(meta, f"{s.name} · kaushal skills", head + doc, 1, "skills").encode()
+        pages[f"skills/{s.name}.html"] = site.page(meta, f"{s.name} · vishvakarma skills", head + doc, 1, "skills").encode()
         extra = f" · {len(scripts)} script{'s' if len(scripts) != 1 else ''}" if scripts else ""
         cards.append(f'<a class="card" href="{s.name}.html"><div class="n">{s.origin}{extra}</div>'
                      f"<h3><code>{html.escape(s.name)}</code></h3><p>{html.escape(s.description)}</p></a>")
-    intro = ("<h2>Skills</h2><p>Every skill kaushal gives your agents: Claude Code on every account, Codex, opencode, "
+    intro = ("<h2>Skills</h2><p>Every skill vishvakarma gives your agents: Claude Code on every account, Codex, opencode, "
              "Gemini CLI and any agent reading <code>~/.agents/skills</code>. A skill is a folder with a "
              '<a href="https://agentskills.io">SKILL.md</a>: its description says when to use it, its body how. '
-             "Ask an agent for the job in your own words and it uses the skill. Your own skills (<code>kaushal new NAME</code>) "
+             "Ask an agent for the job in your own words and it uses the skill. Your own skills (<code>vishvakarma new NAME</code>) "
              f'join these on your machine. Sources: <a href="{GH}/tree/main/skills">skills/</a>.</p>')
     grid = f'<div class="cards">{"".join(cards)}</div>'
-    pages["skills/index.html"] = site.page(meta, "Skills · kaushal", intro + grid, 1, "skills").encode()
+    pages["skills/index.html"] = site.page(meta, "Skills · vishvakarma", intro + grid, 1, "skills").encode()
     return pages
 
 

@@ -11,7 +11,7 @@ working day hour by hour, lunch break included. This skill writes it from
 what the user actually did and sends it the way their past DSRs went.
 
 Scripts are in `scripts/` next to this file (run them with `python3`).
-Settings, all optional, are in `~/.config/kaushal/dsr.toml` (see
+Settings, all optional, are in `~/.config/vishvakarma/dsr.toml` (see
 `config.example.toml` here): `subject`, `account`, `repos`, `authors`,
 `lunch`, `lunch_task`, `greeting`.
 

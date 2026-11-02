@@ -9,7 +9,7 @@ vesha, Vayu's Claude Code account manager, keeps each account in its own profile
 
 ## Decision
 
-kaushal treats every Claude Code profile as a place to sync: `~/.claude` (whose servers are in `~/.claude.json`), `$CLAUDE_CONFIG_DIR` if set, and every vesha profile. It writes the profile's `.claude.json` directly rather than through `claude mcp add`, because `claude` may be vesha's wrapper, which picks a profile by folder.
+vishvakarma treats every Claude Code profile as a place to sync: `~/.claude` (whose servers are in `~/.claude.json`), `$CLAUDE_CONFIG_DIR` if set, and every vesha profile. It writes the profile's `.claude.json` directly rather than through `claude mcp add`, because `claude` may be vesha's wrapper, which picks a profile by folder.
 
 ## Consequences
 

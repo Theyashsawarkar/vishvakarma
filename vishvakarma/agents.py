@@ -1,4 +1,4 @@
-"""Each agent kaushal knows: where it keeps skills, MCP servers and global
+"""Each agent vishvakarma knows: where it keeps skills, MCP servers and global
 instructions, and how to put ours there without touching anything else.
 
   Claude Code  skills linked into <config>/skills; servers in the profile's
@@ -13,8 +13,8 @@ instructions, and how to put ours there without touching anything else.
                open Agent Skills convention
 
 An agent counts when its command is on PATH or its folder exists. What
-kaushal added is recorded (state.json), so a skill or server removed from
-kaushal is removed from the agents too, and nothing of yours is touched.
+vishvakarma added is recorded (state.json), so a skill or server removed from
+vishvakarma is removed from the agents too, and nothing of yours is touched.
 """
 import glob
 import json
@@ -24,10 +24,10 @@ import tomllib
 
 from .store import HOME, Server, Skill, which
 
-BEGIN = "<!-- >>> kaushal: written by `kaushal sync`; change the skills, not this block >>> -->"
-END = "<!-- <<< kaushal <<< -->"
-TOML_BEGIN = "# >>> kaushal: written by `kaushal sync` >>>"
-TOML_END = "# <<< kaushal <<<"
+BEGIN = "<!-- >>> vishvakarma: written by `vishvakarma sync`; change the skills, not this block >>> -->"
+END = "<!-- <<< vishvakarma <<< -->"
+TOML_BEGIN = "# >>> vishvakarma: written by `vishvakarma sync` >>>"
+TOML_END = "# <<< vishvakarma <<<"
 
 
 # ------------------------------------------------------------------ files
@@ -44,7 +44,7 @@ def write_text(path: str, text: str) -> None:
     """Atomically, keeping the file's mode (0600 config files stay 0600)."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     mode = os.stat(path).st_mode & 0o777 if os.path.exists(path) else 0o644
-    tmp = f"{path}.kaushal-{os.getpid()}"
+    tmp = f"{path}.vishvakarma-{os.getpid()}"
     with open(tmp, "w", encoding="utf-8") as f:
         f.write(text)
     os.chmod(tmp, mode)
@@ -99,7 +99,7 @@ def index(skills: list[Skill], servers: list[Server]) -> str:
 
 
 def link_skills(skills_dir: str, skills: list[Skill], owned: list[str], dry: bool) -> tuple[list[str], list[str]]:
-    """Links each skill into `skills_dir`; unlinks the ones kaushal added that are gone. (changes, now owned)"""
+    """Links each skill into `skills_dir`; unlinks the ones vishvakarma added that are gone. (changes, now owned)"""
     changes, now = [], []
     want = {s.name: s.path for s in skills if not s.problems}
     for name, src in want.items():

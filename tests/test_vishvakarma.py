@@ -1,4 +1,4 @@
-"""kaushal end to end in a throwaway HOME (fake agents and tools on PATH), and its pieces."""
+"""vishvakarma end to end in a throwaway HOME (fake agents and tools on PATH), and its pieces."""
 import json
 import os
 import subprocess
@@ -10,8 +10,8 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from kaushal.agents import BEGIN, END, merge_servers, replace_block  # noqa: E402
-from kaushal.store import frontmatter  # noqa: E402
+from vishvakarma.agents import BEGIN, END, merge_servers, replace_block  # noqa: E402
+from vishvakarma.store import frontmatter  # noqa: E402
 
 
 class Home:
@@ -32,10 +32,10 @@ class Home:
 
     def run(self, *args, ok=True):
         env = {"HOME": self.dir, "PATH": f"{self.bin}:/usr/bin:/bin"}
-        r = subprocess.run([sys.executable, os.path.join(ROOT, "bin", "kaushal"), *args],
+        r = subprocess.run([sys.executable, os.path.join(ROOT, "bin", "vishvakarma"), *args],
                            capture_output=True, text=True, env=env)
         if ok and r.returncode != 0:
-            raise AssertionError(f"kaushal {' '.join(args)} failed:\n{r.stdout}{r.stderr}")
+            raise AssertionError(f"vishvakarma {' '.join(args)} failed:\n{r.stdout}{r.stderr}")
         return r
 
     def json(self, *parts):
@@ -107,7 +107,7 @@ class Sync(unittest.TestCase):
     def test_your_skills_and_overrides(self):
         h = Home()
         os.makedirs(h.path(".claude"))
-        h.write(".config/kaushal/mcp.toml", '[servers.sangam]\nenabled = false\n\n[servers.mine]\ncommand = "sandesh"\nargs = ["x"]\n')
+        h.write(".config/vishvakarma/mcp.toml", '[servers.sangam]\nenabled = false\n\n[servers.mine]\ncommand = "sandesh"\nargs = ["x"]\n')
         h.run("new", "notes")
         h.run("sync")
         servers = h.json(".claude.json")["mcpServers"]
@@ -162,7 +162,7 @@ class Sync(unittest.TestCase):
     def test_commands_answer(self):
         h = Home()
         self.assertIn("dsr", h.run().stdout)
-        self.assertIn("kaushal sync", h.run("help").stdout)
+        self.assertIn("vishvakarma sync", h.run("help").stdout)
         self.assertTrue(h.run("path", "dsr").stdout.strip().endswith("skills/dsr"))
 
 
@@ -188,7 +188,7 @@ class Pieces(unittest.TestCase):
         self.assertEqual(len(changes), 2)
 
     def test_every_vayu_skill_is_valid(self):
-        from kaushal.store import load_skill
+        from vishvakarma.store import load_skill
         root = os.path.join(ROOT, "skills")
         for name in os.listdir(root):
             s = load_skill("vayu", os.path.join(root, name))

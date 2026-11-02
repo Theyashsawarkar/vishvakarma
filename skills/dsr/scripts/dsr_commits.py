@@ -6,7 +6,7 @@ material of a Daily Status Report.
 
 DATE: today (default), yesterday, YYYY-MM-DD or DD/MM/YYYY. Repositories are
 found up to three folders deep under each DIR (default: `repos` in
-~/.config/kaushal/dsr.toml, else ~/work ~/codes ~/projects ~/src). Authors:
+~/.config/vishvakarma/dsr.toml, else ~/work ~/codes ~/projects ~/src). Authors:
 --author, else `authors` in dsr.toml, else the git user.email of each
 repository and the global one. A commit counts on the day its author wrote
 it (author date, local time), on any branch, once.
@@ -19,7 +19,7 @@ import subprocess
 import sys
 import tomllib
 
-CONFIG = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "kaushal", "dsr.toml")
+CONFIG = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "vishvakarma", "dsr.toml")
 SKIP = {"node_modules", ".venv", "venv", "vendor", "dist", "build", "target", ".cache"}
 
 

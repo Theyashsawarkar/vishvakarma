@@ -1,4 +1,4 @@
-# Copy to ~/.config/kaushal/dsr.toml and change what differs for you.
+# Copy to ~/.config/vishvakarma/dsr.toml and change what differs for you.
 # Everything is optional.
 
 subject = "Daily Status Report"       # how to find your DSR thread in sent mail
