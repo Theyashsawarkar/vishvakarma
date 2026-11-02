@@ -11,6 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, "skills", "dsr", "scripts")
 sys.path.insert(0, SCRIPTS)
 
+import dsr_commits  # noqa: E402
 import dsr_render  # noqa: E402
 
 T = dsr_render.clock
@@ -60,7 +61,60 @@ class Check(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(d, "dsr.html")))
 
 
+class Structure(unittest.TestCase):
+    DAY = Check.DAY
+    COMMITS = {"repos": {"/w/app": [
+        {"time": "16:00", "subject": "Fix login", "project": "App", "merge": False, "pushed": True,
+         "url": "https://github.com/o/App/commit/b"},
+        {"time": "11:00", "subject": "Add page", "project": "App", "merge": False, "pushed": True,
+         "url": "https://github.com/o/App/commit/a"},
+        {"time": "17:00", "subject": "Merge branch", "project": "App", "merge": True, "pushed": True, "url": "x"}]}}
+
+    def test_commit_links_at_the_bottom_oldest_first(self):
+        links, problems, _ = dsr_render.links(self.COMMITS, False)
+        self.assertEqual(problems, [])
+        self.assertEqual([s for _, s, _ in links], ["Add page", "Fix login"])
+        plain, page = dsr_render.render("02/11/2026", self.DAY, "Hello,", links, ["Regards,", "Me"])
+        self.assertLess(plain.index("Lunch Break"), plain.index("Commits:"))
+        self.assertLess(plain.index("Commits:"), plain.index("Regards,\nMe"))
+        self.assertIn('<a href="https://github.com/o/App/commit/a">Add page</a>', page)
+        self.assertNotIn("Merge branch", page)
+
+    def test_unpushed_commits_are_refused_or_left_out(self):
+        data = {"repos": {"/w/app": [{"subject": "Local", "project": "App", "pushed": False, "url": "u"}]}}
+        self.assertIn("not pushed", dsr_render.links(data, False)[1][0])
+        links, problems, left = dsr_render.links(data, True)
+        self.assertEqual((links, problems, len(left)), ([], [], 1))
+
+    def test_monday_is_new_the_rest_reply_in_the_weeks_thread(self):
+        cfg = {"to": ["Boss <b@x.com>"], "cc": ["HR"]}
+        mon = dsr_render.plan(dt.date(2026, 11, 2), cfg)
+        sat = dsr_render.plan(dt.date(2026, 11, 7), cfg)
+        self.assertEqual((mon["mode"], sat["mode"]), ("new", "reply"))
+        self.assertEqual(mon["subject"], "Daily Status Report: 02/11/2026 to 07/11/2026")
+        self.assertEqual(mon["subject"], sat["subject"])
+        self.assertEqual(mon["unresolved"], ["HR"])
+
+    def test_sunday_is_refused(self):
+        d = tempfile.mkdtemp()
+        with open(os.path.join(d, "rows.json"), "w") as f:
+            json.dump({"date": "01/11/2026", "rows": [["09:00 AM", "10:00 AM", "a"]]}, f)
+        r = subprocess.run([sys.executable, os.path.join(SCRIPTS, "dsr_render.py"), os.path.join(d, "rows.json")],
+                           capture_output=True, text=True, env={**os.environ, "XDG_CONFIG_HOME": d})
+        self.assertEqual(r.returncode, 2)
+        self.assertIn("Sunday", r.stderr)
+
+
 class Commits(unittest.TestCase):
+    def test_web_links_from_remotes(self):
+        for remote, want in (("git@github.com:o/r.git", "https://github.com/o/r"),
+                             ("git@github-work:o/r.git", "https://github.com/o/r"),
+                             ("https://github.com/o/r", "https://github.com/o/r"),
+                             ("ssh://git@gitlab.com/g/r.git", "https://gitlab.com/g/r"),
+                             ("git@example.org:o/r.git", "")):
+            self.assertEqual(dsr_commits.web_url(remote), want, remote)
+        self.assertEqual(dsr_commits.commit_link("https://gitlab.com/g/r", "a1"), "https://gitlab.com/g/r/-/commit/a1")
+
     def test_finds_the_days_commits_by_author_date(self):
         root = tempfile.mkdtemp()
         repo = os.path.join(root, "work", "app")
@@ -87,6 +141,7 @@ class Commits(unittest.TestCase):
         subjects = [c["subject"] for c in found[repo]]
         self.assertEqual(subjects, ["built the thing"])
         self.assertEqual(found[repo][0]["body"], "the details")
+        self.assertFalse(found[repo][0]["pushed"])
 
 
 if __name__ == "__main__":

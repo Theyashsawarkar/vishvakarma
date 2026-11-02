@@ -9,12 +9,15 @@ found up to three folders deep under each DIR (default: `repos` in
 ~/.config/vishvakarma/dsr.toml, else ~/work ~/codes ~/projects ~/src). Authors:
 --author, else `authors` in dsr.toml, else the git user.email of each
 repository and the global one. A commit counts on the day its author wrote
-it (author date, local time), on any branch, once.
+it (author date, local time), on any branch, once. Each commit carries its
+web link (from the `origin` remote, GitHub or GitLab) and whether it's
+pushed (on a remote branch): only pushed commits have a link that works.
 """
 import argparse
 import datetime as dt
 import json
 import os
+import re
 import subprocess
 import sys
 import tomllib
@@ -62,11 +65,33 @@ def git(repo: str, *args: str) -> str:
     return r.stdout if r.returncode == 0 else ""
 
 
+def web_url(remote: str) -> str:
+    """git@github.com:o/r.git, ssh://git@host/o/r, https://host/o/r.git or an
+    ssh alias like github-work -> https://github.com/o/r ("" if unknown)."""
+    m = re.match(r"^(?:[a-z+]+://)?(?:[^@/]+@)?([^/:]+)[:/](.+?)(?:\.git)?/?$", remote.strip())
+    if not m:
+        return ""
+    host = m.group(1).lower()
+    for known in ("github", "gitlab"):
+        if host.startswith(known) and "." not in host.split(known, 1)[1].strip("-_"):
+            host = f"{known}.com"  # an ssh Host alias (github-personal)
+    if not host.startswith(("github.", "gitlab.")):
+        return ""
+    return f"https://{host}/{m.group(2)}"
+
+
+def commit_link(web: str, sha: str) -> str:
+    if not web:
+        return ""
+    return f"{web}/-/commit/{sha}" if "gitlab." in web else f"{web}/commit/{sha}"
+
+
 def commits(repo: str, day: dt.date, authors: set[str]) -> list[dict]:
     # Committer-date window a day wider each side, then the exact author date.
     since, until = day - dt.timedelta(days=2), day + dt.timedelta(days=3)
     raw = git(repo, "log", "--all", f"--since={since}", f"--until={until}",
               "--format=%H%x1f%aI%x1f%ae%x1f%P%x1f%s%x1f%b%x1e")
+    web = web_url(git(repo, "remote", "get-url", "origin"))
     out, seen = [], set()
     for rec in raw.split("\x1e"):
         parts = rec.strip("\n").split("\x1f")
@@ -78,7 +103,10 @@ def commits(repo: str, day: dt.date, authors: set[str]) -> list[dict]:
         if at.date() != day or (authors and email.lower() not in authors):
             continue
         stat = git(repo, "show", "--shortstat", "--format=", sha).strip().splitlines()
-        out.append({"time": at.strftime("%H:%M"), "subject": subject, "merge": len(parents.split()) > 1,
+        pushed = bool(git(repo, "branch", "-r", "--contains", sha).strip())
+        out.append({"time": at.strftime("%H:%M"), "sha": sha, "subject": subject, "merge": len(parents.split()) > 1,
+                    "project": web.rsplit("/", 1)[-1] if web else os.path.basename(repo),
+                    "url": commit_link(web, sha), "pushed": pushed,
                     "body": "\n".join(line for line in body.strip().splitlines() if not line.startswith("Co-Authored-By"))[:1500],
                     "stat": stat[-1].strip() if stat else ""})
     return sorted(out, key=lambda c: c["time"])
@@ -112,7 +140,8 @@ def main() -> int:
     for repo, found in result.items():
         print(f"\n== {repo.replace(os.path.expanduser('~'), '~')}")
         for c in found:
-            print(f"{c['time']}  {'[merge] ' if c['merge'] else ''}{c['subject']}" + (f"  ({c['stat']})" if c["stat"] else ""))
+            print(f"{c['time']}  {'[merge] ' if c['merge'] else ''}{c['subject']}" + (f"  ({c['stat']})" if c["stat"] else "")
+                  + ("" if c["pushed"] else "  [NOT PUSHED]"))
             for line in c["body"].splitlines():
                 print(f"        {line}")
     return 0

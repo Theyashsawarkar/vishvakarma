@@ -2,6 +2,22 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.3.1 -- 2026-11-02
+
+- **dsr: one fixed structure, a thread per week, links to the commits.**
+  The skill no longer studies past DSRs for their format: it's written
+  down (greeting, date, the Time | Tasks table, the day's commits grouped
+  by project, sign-off) and `dsr_render.py` produces it. Weeks run Monday
+  to Saturday: Monday's DSR is a new mail with the week's subject
+  (`subject_template`), Tuesday to Saturday reply to everyone in that
+  thread; Sunday is refused. Recipients are `to` and `cc` in dsr.toml (a
+  name alone is looked up once, then saved with its address).
+- `dsr_commits.py` gives each commit its GitHub or GitLab link and whether
+  it's pushed; `dsr_render.py --commits` puts the pushed, non-merge ones
+  at the bottom and refuses unpushed ones (their links wouldn't open)
+  unless `--skip-unpushed`. It also writes `send.json`: new or reply, the
+  subject, the search for the week's thread, to and cc.
+
 ## v0.3.0 -- 2026-11-02
 
 - **Renamed from kaushal to vishvakarma** (विश्वकर्मा, the divine craftsman). The

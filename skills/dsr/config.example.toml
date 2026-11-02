@@ -1,10 +1,20 @@
 # Copy to ~/.config/vishvakarma/dsr.toml and change what differs for you.
-# Everything is optional.
 
-subject = "Daily Status Report"       # how to find your DSR thread in sent mail
+# Who gets it, every day. "Name <address>", or just a name: the agent looks
+# up the address the first time, asks you, and writes it here.
+to = ["Your Manager <manager@example.com>"]
+cc = ["Team Lead <lead@example.com>", "HR <hr@example.com>"]
+
+# One thread per week (Monday to Saturday): Monday's mail has this subject,
+# the rest of the week replies to everyone in it.
+# {week_start} {week_end}: that Monday and Saturday; {date}: the day.
+subject_template = "Daily Status Report: {week_start} to {week_end}"
+
 # account = "work"                    # narada account to send from, if you have several
 repos = ["~/work", "~/codes"]         # where your work repositories are (searched 3 levels deep)
 # authors = ["you@example.com"]       # your commit emails (default: git's user.email)
 lunch = "01:00 PM to 02:00 PM"        # "" if your DSR has no lunch row
 lunch_task = "Lunch Break"
 greeting = "Hello,"
+# name = "Your Name"                  # signs "Regards,\n<name>" (default: git's user.name)
+# signoff = "Thanks and regards,\nYour Name"   # or the whole sign-off

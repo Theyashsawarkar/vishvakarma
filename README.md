@@ -194,7 +194,7 @@ Only servers whose command is installed are registered.
 
 | Skill | What it does, and when an agent uses it |
 |---|---|
-| [`dsr`](skills/dsr/SKILL.md) | Write and send the user's Daily Status Report (DSR), the end-of-day email with a Time \| Tasks table, for any date. Reconstructs the day from the user's git commits, matches the format of their past DSRs, checks the timetable (start and end time, lunch break, no gaps) and sends it as a real HTML table through narada, as a reply-all in their DSR thread. Use when the user asks for a DSR, daily status report, daily report, status mail or end-of-day update, or to send or backfill one for a date. |
+| [`dsr`](skills/dsr/SKILL.md) | Write and send the user's Daily Status Report (DSR), the end-of-day email with a Time \| Tasks table and links to the day's commits, for any date. Builds the day from the user's git commits, checks the timetable (start and end, lunch, no gaps) and sends it through narada as an HTML table in its weekly thread - a new mail on Monday, a reply-all to the previous DSR Tuesday to Saturday. Use when the user asks for a DSR, daily status report, daily report, status mail or end-of-day update, or to send or backfill one for a date. |
 <!-- /skills -->
 
 Settings for a skill stay on your machine, in `~/.config/vishvakarma/` (the `dsr` skill's in
