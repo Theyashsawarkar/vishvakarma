@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in kaushal/__init__.py.
 
+## v0.2.1 -- 2026-11-02
+
+- darshan joins the MCP servers: agents can show you a file and hear what you ask about it.
+
 ## v0.2.0 -- 2026-10-28
 
 - **The app, `kaushal ui`**: every skill, tool and agent in three tabs, in

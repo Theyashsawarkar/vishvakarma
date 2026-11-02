@@ -8,6 +8,11 @@ description = "Run commands as root (or as you, outside your sandbox) after the 
 command = "anumati"
 args = ["--mcp"]
 
+[servers.darshan]
+description = "Show the user PDFs, images and Markdown in their terminal, find files by name across the system, and answer what they ask about what they're reading"
+command = "darshan"
+args = ["mcp"]
+
 [servers.ekatva]
 description = "The user's phone: status, ring, lock, SMS and calls (asks the user first), its clipboard and files, keeping the laptop awake"
 command = "ekatva"
