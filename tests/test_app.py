@@ -28,14 +28,14 @@ class Off(unittest.TestCase):
         h = Home()
         os.makedirs(h.path(".claude"))
         h.run("sync")
-        h.run("off", "sandesh")
-        self.assertNotIn("sandesh", h.json(".claude.json")["mcpServers"])
+        h.run("off", "narada")
+        self.assertNotIn("narada", h.json(".claude.json")["mcpServers"])
         h.run("off", "dsr")
         self.assertFalse(os.path.lexists(h.path(".claude/skills/dsr")))
         self.assertIn("(off)", h.run().stdout)
-        h.run("on", "sandesh")
+        h.run("on", "narada")
         h.run("on", "dsr")
-        self.assertIn("sandesh", h.json(".claude.json")["mcpServers"])
+        self.assertIn("narada", h.json(".claude.json")["mcpServers"])
         self.assertTrue(os.path.islink(h.path(".claude/skills/dsr")))
         self.assertEqual(h.run("doctor").returncode, 0)
 
@@ -83,7 +83,7 @@ class TakeBackOne(unittest.TestCase):
                                     "ops.sync(take_back=True, only=t.key)")
         self.assertEqual(out, "")
         self.assertEqual(h.json(".claude.json")["mcpServers"], {})
-        self.assertIn("sandesh", h.json(".config/opencode/opencode.json")["mcp"])   # the others keep theirs
+        self.assertIn("narada", h.json(".config/opencode/opencode.json")["mcp"])   # the others keep theirs
 
 
 class App(unittest.TestCase):

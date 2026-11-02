@@ -3,9 +3,9 @@
 # ~/.config/vishvakarma/mcp.toml; `enabled = false` leaves one out.
 # "{agent}" in args or env becomes the agent's name (claude, codex, ...).
 
-[servers.anumati]
+[servers.dvarapala]
 description = "Run commands as root (or as you, outside your sandbox) after the user approves each one: request_root_commands"
-command = "anumati"
+command = "dvarapala"
 args = ["--mcp"]
 
 [servers.darshan]
@@ -19,14 +19,14 @@ command = "ekatva"
 args = ["mcp"]
 env = { EKATVA_AGENT = "{agent}" }
 
-[servers.prasar]
+[servers.vaikhari]
 description = "Posts to the user's X and LinkedIn: check a text against each network, draft, and propose posts (every one waits for the user's approval; X needs their click)"
-command = "prasar"
+command = "vaikhari"
 args = ["mcp", "--requester", "{agent}"]
 
-[servers.sandesh]
+[servers.narada]
 description = "The user's Gmail and Google Chat: list, search, read, draft and send (sends ask the user first; html for tables)"
-command = "sandesh"
+command = "narada"
 args = ["mcp"]
 
 [servers.sangam]

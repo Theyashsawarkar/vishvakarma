@@ -194,7 +194,7 @@ Only servers whose command is installed are registered.
 
 | Skill | What it does, and when an agent uses it |
 |---|---|
-| [`dsr`](skills/dsr/SKILL.md) | Write and send the user's Daily Status Report (DSR), the end-of-day email with a Time \| Tasks table, for any date. Reconstructs the day from the user's git commits, matches the format of their past DSRs, checks the timetable (start and end time, lunch break, no gaps) and sends it as a real HTML table through sandesh, as a reply-all in their DSR thread. Use when the user asks for a DSR, daily status report, daily report, status mail or end-of-day update, or to send or backfill one for a date. |
+| [`dsr`](skills/dsr/SKILL.md) | Write and send the user's Daily Status Report (DSR), the end-of-day email with a Time \| Tasks table, for any date. Reconstructs the day from the user's git commits, matches the format of their past DSRs, checks the timetable (start and end time, lunch break, no gaps) and sends it as a real HTML table through narada, as a reply-all in their DSR thread. Use when the user asks for a DSR, daily status report, daily report, status mail or end-of-day update, or to send or backfill one for a date. |
 <!-- /skills -->
 
 Settings for a skill stay on your machine, in `~/.config/vishvakarma/` (the `dsr` skill's in
@@ -204,10 +204,10 @@ Settings for a skill stay on your machine, in `~/.config/vishvakarma/` (the `dsr
 
 | Server | What it gives agents |
 |---|---|
-| [anumati](https://github.com/Theyashsawarkar/anumati) | root commands, run only after you approve each one |
+| [dvarapala](https://github.com/Theyashsawarkar/dvarapala) | root commands, run only after you approve each one |
 | [ekatva](https://github.com/Theyashsawarkar/ekatva) | your phone: status, ring, lock, SMS and calls (asks you first), clipboard, files |
-| [prasar](https://github.com/Theyashsawarkar/prasar) | posts to your X and LinkedIn: check, draft, propose (every post asks you first) |
-| [sandesh](https://github.com/Theyashsawarkar/sandesh) | your Gmail and Google Chat (sends ask you first) |
+| [vaikhari](https://github.com/Theyashsawarkar/vaikhari) | posts to your X and LinkedIn: check, draft, propose (every post asks you first) |
+| [narada](https://github.com/Theyashsawarkar/narada) | your Gmail and Google Chat (sends ask you first) |
 | [sangam](https://github.com/Theyashsawarkar/sangam) | your GitHub pull requests (comments, reviews and merges ask you first) |
 
 ## In Vayu
@@ -227,8 +227,8 @@ launcher, has Vayu's skills and tools from its first message.
 - **Every Claude Code account**: [vesha](https://github.com/Theyashsawarkar/vesha)
   keeps each account in its own profile; vishvakarma gives every profile the
   tools ([ADR 6](docs/adr/0006-every-claude-account.md)).
-- **Vayu's tools for agents** are its MCP servers: anumati (root commands),
-  ekatva (your phone), prasar (posts to X and LinkedIn), sandesh (mail and
+- **Vayu's tools for agents** are its MCP servers: dvarapala (root commands),
+  ekatva (your phone), vaikhari (posts to X and LinkedIn), narada (mail and
   chat), sangam (pull requests).
   Each asks you before anything reaches other people or runs as root.
 - **Vayu's rule**: a new skill or agent-facing tool goes into vishvakarma (a

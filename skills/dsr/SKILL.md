@@ -1,6 +1,6 @@
 ---
 name: dsr
-description: Write and send the user's Daily Status Report (DSR), the end-of-day email with a Time | Tasks table, for any date. Reconstructs the day from the user's git commits, matches the format of their past DSRs, checks the timetable (start and end time, lunch break, no gaps) and sends it as a real HTML table through sandesh, as a reply-all in their DSR thread. Use when the user asks for a DSR, daily status report, daily report, status mail or end-of-day update, or to send or backfill one for a date.
+description: Write and send the user's Daily Status Report (DSR), the end-of-day email with a Time | Tasks table, for any date. Reconstructs the day from the user's git commits, matches the format of their past DSRs, checks the timetable (start and end time, lunch break, no gaps) and sends it as a real HTML table through narada, as a reply-all in their DSR thread. Use when the user asks for a DSR, daily status report, daily report, status mail or end-of-day update, or to send or backfill one for a date.
 ---
 
 # Daily Status Report (DSR)
@@ -27,8 +27,8 @@ Settings, all optional, are in `~/.config/vishvakarma/dsr.toml` (see
 
 ## 2. Learn the format from what they sent before
 
-Search their sent mail (sandesh: the `mail_search` tool, or
-`sandesh mail search`) for `in:sent subject:"Daily Status Report"`
+Search their sent mail (narada: the `mail_search` tool, or
+`narada mail search`) for `in:sent subject:"Daily Status Report"`
 (or `subject` from dsr.toml) and read the newest thread. Note:
 
 - **who it goes to** (To and Cc) and **which thread** the latest DSRs were
@@ -105,16 +105,16 @@ send it without checking. Apply their changes, render again, and send.
 As a reply-all in the DSR thread from step 2 (`account` from dsr.toml if
 they have several):
 
-- **MCP** (sandesh's `mail_send`): `reply_to_thread` = the thread id,
+- **MCP** (narada's `mail_send`): `reply_to_thread` = the thread id,
   `reply_all` = true, `body` = the text of dsr.txt, `html` = the text of
-  dsr.html. The user approves it in sandesh's popup.
+  dsr.html. The user approves it in narada's popup.
 - **Command line**, or if `mail_send` has no `html` parameter (an older
-  sandesh): `sandesh mail send --reply THREAD --all --html dsr.html < dsr.txt`.
+  narada): `narada mail send --reply THREAD --all --html dsr.html < dsr.txt`.
   It sends after a 10-second undo window, without a popup: confirm first
   (step 6).
 
 Never send it as plain text only, and never claim it was sent unless
-sandesh said "sent".
+narada said "sent".
 
 ## 8. Check it arrived
 

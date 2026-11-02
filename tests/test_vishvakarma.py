@@ -17,7 +17,7 @@ from vishvakarma.store import frontmatter  # noqa: E402
 class Home:
     """A throwaway HOME with fake `claude`, `codex`, `opencode` and tool commands on PATH."""
 
-    def __init__(self, commands=("claude", "codex", "opencode", "sandesh", "sangam", "ekatva", "anumati", "prasar", "darshan")):
+    def __init__(self, commands=("claude", "codex", "opencode", "narada", "sangam", "ekatva", "dvarapala", "vaikhari", "darshan")):
         self.dir = tempfile.mkdtemp()
         self.bin = os.path.join(self.dir, "fakebin")
         os.makedirs(self.bin)
@@ -64,9 +64,9 @@ class Sync(unittest.TestCase):
         cfg = h.json(".claude.json")
         self.assertEqual(cfg["numStartups"], 7)
         self.assertIn("mine", cfg["mcpServers"])
-        self.assertEqual(cfg["mcpServers"]["sandesh"], {"type": "stdio", "command": "sandesh", "args": ["mcp"], "env": {}})
+        self.assertEqual(cfg["mcpServers"]["narada"], {"type": "stdio", "command": "narada", "args": ["mcp"], "env": {}})
         self.assertEqual(cfg["mcpServers"]["ekatva"]["env"], {"EKATVA_AGENT": "claude"})
-        self.assertEqual(cfg["mcpServers"]["prasar"]["args"], ["mcp", "--requester", "claude"])
+        self.assertEqual(cfg["mcpServers"]["vaikhari"]["args"], ["mcp", "--requester", "claude"])
         # The shared folder of the Agent Skills convention.
         self.assertTrue(os.path.islink(h.path(".agents/skills/dsr")))
         # Codex: a valid config.toml with the servers, skills, an index.
@@ -94,7 +94,7 @@ class Sync(unittest.TestCase):
         os.symlink(h.path(".claude/skills"), os.path.join(prof, "skills"))
         h.write(".local/state/vesha/profiles/work/.claude.json", "{}")
         h.run("sync")
-        self.assertIn("sandesh", h.json(".local/state/vesha/profiles/work/.claude.json")["mcpServers"])
+        self.assertIn("narada", h.json(".local/state/vesha/profiles/work/.claude.json")["mcpServers"])
 
     def test_missing_tools_are_left_out(self):
         h = Home(commands=("claude",))
@@ -107,7 +107,7 @@ class Sync(unittest.TestCase):
     def test_your_skills_and_overrides(self):
         h = Home()
         os.makedirs(h.path(".claude"))
-        h.write(".config/vishvakarma/mcp.toml", '[servers.sangam]\nenabled = false\n\n[servers.mine]\ncommand = "sandesh"\nargs = ["x"]\n')
+        h.write(".config/vishvakarma/mcp.toml", '[servers.sangam]\nenabled = false\n\n[servers.mine]\ncommand = "narada"\nargs = ["x"]\n')
         h.run("new", "notes")
         h.run("sync")
         servers = h.json(".claude.json")["mcpServers"]
@@ -125,20 +125,20 @@ class Sync(unittest.TestCase):
     def test_your_own_server_wins_and_an_identical_one_is_adopted(self):
         h = Home()
         os.makedirs(h.path(".claude"))
-        same = {"type": "stdio", "command": "sandesh", "args": ["mcp"], "env": {}}
-        h.write(".claude.json", json.dumps({"mcpServers": {"sangam": {"command": "my-sangam"}, "sandesh": same}}))
+        same = {"type": "stdio", "command": "narada", "args": ["mcp"], "env": {}}
+        h.write(".claude.json", json.dumps({"mcpServers": {"sangam": {"command": "my-sangam"}, "narada": same}}))
         self.assertIn("skip server sangam", h.run("sync").stdout)
         self.assertEqual(h.json(".claude.json")["mcpServers"]["sangam"], {"command": "my-sangam"})
         h.run("unsync")
         servers = h.json(".claude.json")["mcpServers"]
-        self.assertEqual(servers, {"sangam": {"command": "my-sangam"}})  # adopted sandesh went, theirs stayed
+        self.assertEqual(servers, {"sangam": {"command": "my-sangam"}})  # adopted narada went, theirs stayed
 
     def test_codex_server_you_defined_wins(self):
         h = Home()
-        h.write(".codex/config.toml", 'model = "x"\n\n[mcp_servers.sandesh]\ncommand = "my-sandesh"\n')
+        h.write(".codex/config.toml", 'model = "x"\n\n[mcp_servers.narada]\ncommand = "my-narada"\n')
         h.run("sync")
         codex = tomllib.loads(h.text(".codex/config.toml"))
-        self.assertEqual(codex["mcp_servers"]["sandesh"]["command"], "my-sandesh")
+        self.assertEqual(codex["mcp_servers"]["narada"]["command"], "my-narada")
         self.assertEqual(codex["model"], "x")
 
     def test_unsync_takes_everything_back(self):
