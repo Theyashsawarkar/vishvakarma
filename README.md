@@ -6,6 +6,15 @@
   </picture>
 </p>
 
+<!-- identity -->
+<p align="center">
+  <b>विश्वतश्चक्षुरुत विश्वतोमुखो विश्वतोबाहुरुत विश्वतस्पात् ।<br>
+  सं बाहुभ्यां धमति सं पतत्रैर्द्यावाभूमी जनयन्देव एकः ॥</b><br>
+  <i>Eyes, faces, arms and feet on every side: the one maker forges heaven and earth with his hands.</i><br>
+  <sub>Ṛgveda 10.81.3</sub>
+</p>
+<!-- /identity -->
+
 <p align="center">
   <b>Every skill and tool, in every AI agent.</b><br>
   Claude Code on every account, Codex, opencode, Gemini CLI: whichever agent you open, it already has your skills and your tools.
@@ -18,8 +27,8 @@
   <img alt="Python 3.11+, no dependencies" src="https://img.shields.io/badge/python-3.11%2B%2C%20stdlib%20only-a6e3a1">
 </p>
 
-> *Vishvakarma* (विश्वकर्मा) is Sanskrit for "skill": what you teach once, every
-> agent knows.
+> *Vishvakarma* (विश्वकर्मा) is the divine craftsman of Hindu tradition: what you
+> teach once, every agent knows.
 
 You use more than one AI agent: Claude Code (maybe on several accounts),
 Codex, opencode, Gemini CLI. Each keeps its own skills, its own MCP servers
@@ -190,11 +199,13 @@ Only servers whose command is installed are registered.
 ## Vayu's skills
 
 <!-- skills: written by scripts/site.py from skills/ -->
-1 skill, with its full instructions on the [Skills page](https://theyashsawarkar.github.io/vishvakarma/skills/):
+3 skills, each with its full instructions on the [Skills page](https://theyashsawarkar.github.io/vishvakarma/skills/):
 
 | Skill | What it does, and when an agent uses it |
 |---|---|
 | [`dsr`](skills/dsr/SKILL.md) | Write and send the user's Daily Status Report (DSR), the end-of-day email with a Time \| Tasks table and links to the day's commits, for any date. Builds the day from the user's git commits, checks the timetable (start and end, lunch, no gaps) and sends it through narada as an HTML table in its weekly thread - a new mail on Monday, a reply-all to the previous DSR Tuesday to Saturday. Use when the user asks for a DSR, daily status report, daily report, status mail or end-of-day update, or to send or backfill one for a date. |
+| [`post-about-tool`](skills/post-about-tool/SKILL.md) | Write and publish a social post (LinkedIn, X) about a tool, project or anything else with something to show, with its image attached. Use whenever the user asks to post, announce, share or write about a tool or project on LinkedIn or X, through vaikhari. Covers finding or taking the image; terminal tools are shot in their own big terminal, never from the user's real data or desktop. |
+| [`tool-identity`](skills/tool-identity/SKILL.md) | Give a Vayu tool its identity and its screen's manners - a Sanskrit name, a logo, a real Sanskrit shloka as its tag, colour that means something, and forms that can't be changed by accident. Use whenever creating, renaming or publishing a Vayu tool, building or changing its screen, writing or changing its README, website, site.toml, logo or about screen, or checking a tool against these rules. |
 <!-- /skills -->
 
 Settings for a skill stay on your machine, in `~/.config/vishvakarma/` (the `dsr` skill's in

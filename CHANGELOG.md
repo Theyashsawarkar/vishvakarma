@@ -2,6 +2,11 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.4.0 -- 2026-11-03
+
+- A logo and a shloka at the top of the README and the website: every Vayu tool has them now.
+- New skills: `tool-identity` (every tool's name, logo and shloka) and `post-about-tool` (posts carry an image; terminal tools are shot in their own big terminal, on demo data).
+
 ## v0.3.1 -- 2026-11-02
 
 - **dsr: one fixed structure, a thread per week, links to the commits.**
