@@ -1,6 +1,6 @@
 ---
 name: tool-identity
-description: Give a Vayu tool its identity and its screen's manners - a Sanskrit name, a logo, a real Sanskrit shloka as its tag, colour that means something, and forms that can't be changed by accident. Use whenever creating, renaming or publishing a Vayu tool, building or changing its screen, writing or changing its README, website, site.toml, logo or about screen, or checking a tool against these rules.
+description: Give a Vayu tool its identity and its screen's manners - a Sanskrit name, a logo, a real Sanskrit shloka as its tag, colour that means something, rounded corners, and forms that can't be changed by accident. Use whenever creating, renaming or publishing a Vayu tool, building or changing its screen, writing or changing its README, website, site.toml, logo or about screen, or checking a tool against these rules.
 ---
 
 # A tool's identity
@@ -56,6 +56,12 @@ the theme's colours, never hard-coded ones, and always for the same meanings:
 - muted: what's secondary
 
 Leave ordinary text alone: when everything is coloured, nothing stands out.
+
+**Every corner is rounded.** Frames, cards, bubbles, popups, buttons, progress bars
+and website boxes. In a terminal use `╭╮╰╯`, even beside heavy lines (`━┃`): Unicode
+has no heavy arc, and `┌┐└┘` or `┏┓┗┛` are never used. In CSS, a visible corner never
+has `border-radius: 0`. Only what can't be rounded is exempt: fullscreen windows, and
+tmux's own pane borders.
 
 **Nothing changes by accident.** A settings or credentials form opens read-only.
 Only Enter starts editing a field, never a letter key, because stray typing

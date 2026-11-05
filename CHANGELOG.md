@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.4.1 -- 2026-11-05
+
+- `tool-identity`: every corner is rounded, in every tool (`╭╮╰╯`, never `┌┐└┘` or `┏┓┗┛`), and so are the website's callouts.
+
 ## v0.4.0 -- 2026-11-03
 
 - A logo and a shloka at the top of the README and the website: every Vayu tool has them now.
