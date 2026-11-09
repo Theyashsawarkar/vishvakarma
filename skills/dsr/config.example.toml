@@ -15,6 +15,7 @@ repos = ["~/work", "~/codes"]         # where your work repositories are (search
 # authors = ["you@example.com"]       # your commit emails (default: git's user.email)
 lunch = "01:00 PM to 02:00 PM"        # "" if your DSR has no lunch row
 lunch_task = "Lunch Break"
+# min_sentences = 5                  # every work row is at least this many sentences (never a one-liner)
 greeting = "Hello,"
 # name = "Your Name"                  # signs "Regards,\n<name>" (default: git's user.name)
 # signoff = "Thanks and regards,\nYour Name"   # or the whole sign-off

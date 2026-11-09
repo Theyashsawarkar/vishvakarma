@@ -34,6 +34,18 @@ class Check(unittest.TestCase):
         for want in ("a gap", "an overlap", "starts at 11:30 AM", "ends at 08:00 PM", "Lunch Break"):
             self.assertIn(want, text)
 
+    def test_work_rows_need_five_sentences_but_lunch_does_not(self):
+        five = " ".join(f"Worked on part {n} of the brief flow." for n in range(5))
+        day = rows(("11:30 AM", "01:00 PM", five), ("01:00 PM", "02:00 PM", "Lunch Break"),
+                   ("02:00 PM", "09:00 PM", "Fixed the login bug."))
+        problems = dsr_render.check(day, None, None, "01:00 PM to 02:00 PM", "Lunch Break", 5)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("row 3", problems[0])
+        self.assertIn("1 sentence", problems[0])
+
+    def test_sentences_ignore_fragments(self):
+        self.assertEqual(dsr_render.sentences("Fixed the bug. Ok. Tested it on staging! Was it merged? Yes it was."), 4)
+
     def test_lunch_only_when_the_day_spans_it(self):
         morning = rows(("09:00 AM", "12:00 PM", "a"))
         self.assertEqual(dsr_render.check(morning, None, None, "01:00 PM to 02:00 PM", "Lunch Break"), [])
@@ -52,8 +64,9 @@ class Check(unittest.TestCase):
     def test_command_writes_both_files(self):
         d = tempfile.mkdtemp()
         with open(os.path.join(d, "rows.json"), "w") as f:
-            json.dump({"date": "2026-10-26", "rows": [["11:30 AM", "01:00 PM", "a"], ["01:00 PM", "02:00 PM", "Lunch Break"],
-                                                       ["02:00 PM", "09:00 PM", "b"]]}, f)
+            five = " ".join(f"Worked on part {n} of the brief flow." for n in range(5))
+            json.dump({"date": "2026-10-26", "rows": [["11:30 AM", "01:00 PM", five], ["01:00 PM", "02:00 PM", "Lunch Break"],
+                                                       ["02:00 PM", "09:00 PM", five]]}, f)
         r = subprocess.run([sys.executable, os.path.join(SCRIPTS, "dsr_render.py"), os.path.join(d, "rows.json"),
                             "--start", "11:30 AM", "--end", "09:00 PM"],
                            capture_output=True, text=True, env={**os.environ, "XDG_CONFIG_HOME": d})

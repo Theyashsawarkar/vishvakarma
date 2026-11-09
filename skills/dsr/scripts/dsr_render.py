@@ -14,7 +14,8 @@ Exits 2 listing every problem, unless: the date isn't a Sunday (DSR weeks
 run Monday to Saturday); the rows run back to back with no gap or overlap,
 each ends after it starts; the day starts at --start and ends at --end when
 given; the lunch break from ~/.config/vishvakarma/dsr.toml (default 01:00 PM to
-02:00 PM) is a row of its own when the day spans it; every commit has a web
+02:00 PM) is a row of its own when the day spans it; every work row (not the
+lunch row) has at least `min_sentences` sentences (dsr.toml, default 5); every commit has a web
 link and is pushed (--skip-unpushed leaves unpushed ones out instead).
 
 Writes DIR/dsr.txt, DIR/dsr.html and DIR/send.json (DIR defaults to the
@@ -27,12 +28,14 @@ import json
 import os
 import subprocess
 import sys
+import re
 import tomllib
 
 CONFIG = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "vishvakarma", "dsr.toml")
 SUBJECT = "Daily Status Report: {week_start} to {week_end}"
 FONT = "font-family:Arial,sans-serif;font-size:14px"
 TD = f"border:1px solid #999;padding:6px 10px;vertical-align:top;{FONT}"
+MIN_SENTENCES = 5
 TH = TD.replace("vertical-align:top", "background:#f2f2f2;text-align:left")
 
 
@@ -73,8 +76,13 @@ def week(day: dt.date) -> tuple[dt.date, dt.date]:
     return monday, monday + dt.timedelta(days=5)
 
 
+def sentences(task: str) -> int:
+    """Sentences in a task: pieces ending in . ! or ? (or the end) with at least three words."""
+    return sum(1 for s in re.split(r"(?<=[.!?])\s+", task.strip()) if len(s.split()) >= 3)
+
+
 def check(rows: list[tuple[dt.datetime, dt.datetime, str]], start: str | None, end: str | None, lunch: str | None,
-          lunch_task: str) -> list[str]:
+          lunch_task: str, min_sentences: int = 0) -> list[str]:
     problems = []
     if not rows:
         return ["no rows"]
@@ -83,6 +91,9 @@ def check(rows: list[tuple[dt.datetime, dt.datetime, str]], start: str | None, e
             problems.append(f"row {i + 1} ({show(a)} to {show(b)}) ends before it starts")
         if not task.strip():
             problems.append(f"row {i + 1} has no task")
+        elif min_sentences and task.strip() != lunch_task and sentences(task) < min_sentences:
+            problems.append(f"row {i + 1} ({show(a)} to {show(b)}) has {sentences(task)} sentence(s), "
+                            f"needs at least {min_sentences}: say more about the real work in it")
         if i and rows[i - 1][1] != a:
             gap = "a gap" if rows[i - 1][1] < a else "an overlap"
             problems.append(f"{gap} between {show(rows[i - 1][1])} and {show(a)} (rows {i} and {i + 1})")
@@ -187,7 +198,8 @@ def main() -> int:
         return 2
     lunch_task = cfg.get("lunch_task", "Lunch Break")
     problems = [] if day.weekday() != 6 else [f"{day:%d/%m/%Y} is a Sunday: DSR weeks run Monday to Saturday"]
-    problems += check(rows, a.start, a.end, cfg.get("lunch", "01:00 PM to 02:00 PM") or None, lunch_task)
+    problems += check(rows, a.start, a.end, cfg.get("lunch", "01:00 PM to 02:00 PM") or None, lunch_task,
+                      int(cfg.get("min_sentences", MIN_SENTENCES)))
     commits, link_problems, left_out = links(commit_data, a.skip_unpushed)
     problems += link_problems
     if problems:

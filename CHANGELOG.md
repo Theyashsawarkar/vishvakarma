@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.4.2 -- 2026-11-06
+
+- `dsr`: never a one-liner. Every work row is at least 5 sentences (what, why, how, what was checked, the outcome), all from work that really happened; `dsr_render.py` refuses a shorter row (`min_sentences` in dsr.toml; the lunch row is exempt).
+
 ## v0.4.1 -- 2026-11-05
 
 - `tool-identity`: every corner is rounded, in every tool (`╭╮╰╯`, never `┌┐└┘` or `┏┓┗┛`), and so are the website's callouts.

@@ -84,10 +84,25 @@ gaps or no commits, ask what else they did. Never invent work.
 - Back to back from the start to the end time; blocks of 30 minutes to
   2 hours on :00, :15, :30 or :45; `lunch` from dsr.toml as its own row,
   task exactly `lunch_task`.
-- Tasks: one or two plain past-tense sentences for managers and HR
-  ("Worked on ...", "Fixed ...", "Tested ...", "Reviewed and merged ..."):
-  what was done and why it matters. Name the product, not the repo; no
-  hashes, ticket ids, paths or branch names (the links carry those).
+- Tasks: **never a one-liner. Every work row is a short paragraph of at
+  least 5 sentences** (`min_sentences` in dsr.toml; the lunch row is
+  exempt), so the reader sees the full extent of the work. Plain
+  past-tense sentences for managers and HR ("Worked on ...", "Fixed ...",
+  "Tested ...", "Reviewed and merged ..."). Cover, in this order:
+  1. what was worked on, and for which product;
+  2. why it was needed: the bug, the client's request, the goal;
+  3. how it was done: the approach, the parts touched, who it was
+     discussed with;
+  4. what was checked: tests, reviews, verifying on staging or the device;
+  5. the outcome, and what comes next.
+- **Detail, never invention.** Every sentence must describe work that
+  really happened that day: the commits and their messages, the session,
+  chats and mails, and what the user tells you. When a block has too
+  little real material for five sentences, ask the user what else went
+  into it (calls, debugging, reading, coordination), and don't pad it
+  with work that didn't happen.
+- Name the product, not the repo; no hashes, ticket ids, paths or branch
+  names (the links carry those).
 
 ## 4. Render
 
@@ -96,8 +111,8 @@ python3 scripts/dsr_render.py rows.json --start "11:30 AM" --end "09:00 PM" --co
 ```
 
 It refuses (exit 2, listing every problem) a Sunday, a gap, an overlap, a
-wrong start or end, a missing lunch row, and a commit with no link or not
-pushed; fix and rerun. It writes `dsr.txt`, `dsr.html` and `send.json`
+wrong start or end, a missing lunch row, a work row with fewer than 5
+sentences, and a commit with no link or not pushed; fix and rerun. It writes `dsr.txt`, `dsr.html` and `send.json`
 (`mode` new or reply, `subject`, `thread_query`, `to`, `cc`) and prints the
 mail and the send plan.
 
