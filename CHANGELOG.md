@@ -2,6 +2,14 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.5.0 -- 2026-11-09
+
+- **Vim keys in the app, with `Space` as the leader**, the grammar every Vayu tool shares ([ADR 8](docs/adr/0008-the-space-grammar.md)). It opens in NORMAL mode; the filter and a new skill's name are INSERT. Counts (`4j`, `5G`), `gg`, `Ctrl+d`/`Ctrl+u`, `H`/`L` for the tabs (`Tab`, `h`/`l` and `1`-`3` still work), `/` with `n`/`N`, `yy` copies the path, `dd` takes back from an agent.
+- After `Space` a which-key strip shows what can follow (after 0.3 s); `Space Space` is a palette of every action; `?` lists the keys of the tab you're on, generated from the same table.
+- `x` (off / on for every agent) now asks first, and every question takes only `y` as yes: a stray `Enter` changes nothing.
+- Moved, and they say so for one release: a new skill is `Space a s` (`n` is the next match now), settings `Space e c` (was `c`), take back `dd` (was `u`), sync `Space r s` (was `s`), doctor `Space c d` (was `d`), test `Space c t` (was `t`).
+- The keys are data (`BINDS` in `vishvakarma/tui.py`), resolved by Vyom's keys module, vendored as `vishvakarma/keys.py` (standard library only); `scripts/keybinds.py` writes the `# keybind:` lines and CI checks them and the README table.
+
 ## v0.4.2 -- 2026-11-06
 
 - `dsr`: never a one-liner. Every work row is at least 5 sentences (what, why, how, what was checked, the outcome), all from work that really happened; `dsr_render.py` refuses a shorter row (`min_sentences` in dsr.toml; the lunch row is exempt).

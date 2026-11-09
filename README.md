@@ -104,8 +104,8 @@ It needs Python 3.11 or newer and git.
   not installed), whether each is up to date, what vishvakarma added to it,
   and what a sync would change. Take back vishvakarma's things from one agent.
 
-The top bar says whether every agent is in sync; `s` syncs, `d` runs the
-doctor, both without leaving the app. On Vayu it's a tmux popup on
+The top bar says whether every agent is in sync; `Space r s` syncs, `Space c d`
+runs the doctor, both without leaving the app. On Vayu it's a tmux popup on
 `prefix A`, and in the app launcher.
 
 <p align="center">
@@ -113,23 +113,54 @@ doctor, both without leaving the app. On Vayu it's a tmux popup on
   <img alt="The Agents tab: every agent, up to date or not" src="assets/screenshots/agents.png" width="440">
 </p>
 
-| Key | What it does |
-|---|---|
-| `1` `2` `3`, `Tab` `Shift+Tab` | Skills, Tools, Agents; next, previous tab |
-| `j` `k` (`↓` `↑`), `g` `G` | move; first, last |
-| `Enter` | read the skill / test the tool / open the agent's folder |
-| `e` | edit the skill (one of Vayu's: your own copy first) |
-| `c` | edit the skill's settings (`~/.config/vishvakarma/NAME.toml`, from its example) |
-| `n` | a new skill of your own, opened in your editor |
-| `x` | turn the skill or tool off for every agent (again: back on) |
-| `t` | test the tool |
-| `u` | take back what vishvakarma added to the agent (asks) |
-| `s` | sync every agent |
-| `d` | doctor |
-| `/` | filter the list (`Esc` clears) |
-| `r` | reload |
-| `?` | every key |
-| `q` `Esc` | quit |
+### Keys
+
+Vim keys, with `Space` as the leader, the same grammar as every Vayu tool:
+the app opens in NORMAL mode (keys are commands, typing changes nothing);
+the filter and a new skill's name are INSERT (`Esc` goes back). After
+`Space`, a strip shows what can follow; `Space Space` finds any action by
+name; `?` lists every key of the tab you're on. Anything that changes every
+agent asks first, and only `y` says yes.
+
+| Key | Does |
+| --- | --- |
+| `j` / `k` | Move down / up (counts work: `4j`) |
+| `gg` / `G` | First / last item (`5G`: the fifth) |
+| `Ctrl+d` / `Ctrl+u` | Half a page down / up |
+| `H` / `L` | Previous / next tab (`Tab`, `h` `l` and `1` `2` `3` work too, so a count starts at 4) |
+| `Enter` | Read the skill / test the tool / open the agent's folder |
+| `e` | Edit the skill (one of Vayu's: your own copy first) |
+| `x` | Turn the skill or tool off for every agent, or back on (asks) |
+| `dd` | Take back what vishvakarma added to the agent (asks) |
+| `yy` | Copy the path (a tool: its command) |
+| `/` | Filter the list (`n` / `N`: next / previous match; `Esc` clears) |
+| `n` / `N` | Next / previous match |
+| `r` | Reload |
+| `?` | Every key |
+| `q` / `Esc` | Quit (`Esc` clears a filter first) |
+
+| Leader | Does |
+| --- | --- |
+| `Space Space` | The palette: every action, by name |
+| `Space ?` / `Space q` | Every key / quit |
+| `Space t s` / `Space t t` / `Space t a` | The Skills / Tools / Agents tab |
+| `Space f f` | Filter the list |
+| `Space a s` | A new skill of your own, opened in your editor |
+| `Space e e` / `Space e c` | Edit the skill / its settings (`~/.config/vishvakarma/NAME.toml`, from its example) |
+| `Space d d` | Take back what vishvakarma added to the agent (asks) |
+| `Space r r` / `Space r s` | Reload / sync every agent |
+| `Space c d` / `Space c t` | Check: the doctor / test the tool |
+| `Space m x` | Turn the skill or tool off or on (asks) |
+| `Space y y` | Copy the path |
+| `Space o e` / `Space o f` | Open SKILL.md in your editor / open the folder |
+
+Typing (INSERT): `Enter` confirms, `Esc` cancels, `Ctrl+j` / `Ctrl+k` move
+the list while filtering, `Ctrl+u` clears.
+
+Keys that moved say where they went, for one release: `n` (a new skill: now
+`Space a s`; `n` is the next match), `c` (settings: `Space e c`), `u` (take
+back: `dd`), `s` (sync: `Space r s`), `d` (doctor: `Space c d`), `t` (test:
+`Space c t`).
 
 ## Use
 
