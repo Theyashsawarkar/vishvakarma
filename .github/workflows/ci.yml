@@ -25,6 +25,14 @@ jobs:
           grep -q "^## v$v " CHANGELOG.md || { echo "CHANGELOG.md has no entry for v$v"; exit 1; }
       - name: Unit tests
         run: python -m unittest discover -s tests -v
+      - name: Keys match the keymap, and the README lists them
+        run: |
+          python3 scripts/keybinds.py --check
+          keys=$(grep -o '^# keybind: Vishvakarma/app:normal | [^|]*' vishvakarma/tui.py | sed 's/.*| //; s/ *$//')
+          [ -n "$keys" ] || { echo "no keybind lines found"; exit 1; }
+          printf '%s\n' "$keys" | while read -r k; do
+            grep -qF "\`$k\`" README.md || grep -qF "\`${k// /}\`" README.md || { echo "README doesn't document $k"; exit 1; }
+          done
       - name: Commands work in an empty home
         run: |
           export HOME=$(mktemp -d)
