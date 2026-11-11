@@ -2,6 +2,13 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## Unreleased
+
+- New skill `job-hunt`: browses LinkedIn in the user's own browser, at a person's pace, for jobs that fit their resume, scores each one (why it fits, what's missing) and finds the recruiters and hiring team. It keeps the resume, a profile drawn from it, the jobs already applied to and those already shown in a data folder (`~/Documents/job-hunt` by default), so no job comes up twice. `scripts/jobs.py` keeps the lists and writes each run's report. It only reads: it never applies, connects or messages unless asked, and never guesses an email.
+  - It works with LinkedIn's 2026 job search: the filters go in the search words, and each card is opened to get its job id. `scripts/linkedin.js` reads the result list, a job (header, hiring team, requirements) and a people search.
+  - It fetches the resume from WhatsApp or mail through narada, once.
+  - `jobs.py message` turns a report into a chat message (one block per job: place, why, gaps, link, contacts), and the skill sends or schedules it through narada.
+
 ## v0.5.0 -- 2026-11-09
 
 - **Vim keys in the app, with `Space` as the leader**, the grammar every Vayu tool shares ([ADR 8](docs/adr/0008-the-space-grammar.md)). It opens in NORMAL mode; the filter and a new skill's name are INSERT. Counts (`4j`, `5G`), `gg`, `Ctrl+d`/`Ctrl+u`, `H`/`L` for the tabs (`Tab`, `h`/`l` and `1`-`3` still work), `/` with `n`/`N`, `yy` copies the path, `dd` takes back from an agent.

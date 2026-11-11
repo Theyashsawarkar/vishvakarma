@@ -1,0 +1,22 @@
+# Copy to ~/.config/vishvakarma/job-hunt.toml and change what differs for you.
+# Everything here is optional: without it the skill works out roles and skills from the resume.
+
+# Where the resume, the applied and shown lists, the profile and the reports live.
+data_dir = "~/Documents/job-hunt"
+
+# What to search for. Empty: taken from the resume's profile.
+# roles = ["Backend Engineer", "Node.js Developer"]
+# locations = ["Pune, Maharashtra, India", "India"]
+# workplace = ["remote", "hybrid"]          # any of onsite, remote, hybrid
+# experience = ["associate", "mid-senior"]  # internship, entry, associate, mid-senior, director, executive
+# posted_within_days = 7                    # 1, 7 or 30
+# easy_apply_only = false
+
+# Never show jobs from these (current employer, places you've ruled out).
+# exclude_companies = ["Current Employer"]
+# exclude_title_words = ["intern", "principal"]
+
+# How much one run does. LinkedIn watches for automated browsing, so keep these modest.
+# max_jobs_opened = 25      # job pages read in one run
+# show_top = 10             # jobs in the report
+# min_score = 60            # below this a job is left out
