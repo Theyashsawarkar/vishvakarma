@@ -10,10 +10,14 @@
     jobs.py message [--report R] [--top N] [--tip T]   a report as a WhatsApp/chat message, ready to send
 
 candidates.json is a list of jobs, each:
-    {"url", "company", "title", "location", "posted", "workplace", "easy_apply",
+    {"url", "site", "company", "title", "location", "posted", "workplace", "easy_apply", "experience",
      "score", "why": [...], "gaps": [...], "contacts": [{"name", "role", "profile", "email", "source"}]}
-A job matches a ledger row by its LinkedIn job id, or by company and title (LinkedIn reposts a job
-under a new id, and jobs applied to off LinkedIn have none).
+"site" is the job board it came from (linkedin, indeed, naukri, hirist, cutshort, wellfound,
+internshala, foundit, instahyre, or anything else); left out, it is read from the url. Reports and messages
+group the jobs by site.
+A job matches a ledger row by its job id (LinkedIn's number, "indeed:<jk>", "naukri:<number>", ...), or by
+company and title: boards repost a job under a new id, the same job is often on several boards, and
+jobs applied to on a company site have no id at all.
 """
 import argparse
 import csv
@@ -28,6 +32,22 @@ CONFIG = os.path.expanduser("~/.config/vishvakarma/job-hunt.toml")
 APPLIED = ["date", "company", "title", "url", "job_id", "via", "contact", "status", "notes"]
 SEEN = ["date", "company", "title", "url", "job_id", "score"]
 NOISE = {"inc", "ltd", "llc", "llp", "pvt", "private", "limited", "corp", "corporation", "co", "plc", "gmbh"}
+# The boards the skill searches, in the order reports and messages list them; anything else comes last.
+SITES = {"linkedin": "LinkedIn", "indeed": "Indeed", "naukri": "Naukri", "hirist": "Hirist",
+         "cutshort": "Cutshort", "wellfound": "Wellfound", "internshala": "Internshala", "foundit": "foundit", "instahyre": "Instahyre"}
+# Each board's job link -> its id (kept as "<board>:<id>"; LinkedIn's stays a bare number, as the
+# ledgers have always kept it).
+IDS = [
+    ("", r"(?:linkedin\.com/jobs/view/(?:[^/?#]*?-)?|currentJobId=)(\d{6,})"),
+    ("indeed", r"indeed\.[a-z.]+/.*[?&](?:jk|vjk)=([0-9a-f]{8,})"),
+    ("naukri", r"naukri\.com/job-listings-[^?#]*?-(\d{6,})(?:[/?#]|$)"),
+    ("hirist", r"hirist\.[a-z]+/j/[^?#]*?-(\d{5,})(?:\.html)?(?:[/?#]|$)"),
+    ("cutshort", r"cutshort\.io/job/[^?#]*-([A-Za-z0-9]{8})(?:[/?#]|$)"),
+    ("wellfound", r"wellfound\.com/jobs/(\d{4,})"),
+    ("internshala", r"internshala\.com/job/detail/[^?#]*?(\d{9,})(?:[/?#]|$)"),
+    ("foundit", r"foundit\.in/job/[^?#]*?-(\d{6,})(?:[/?#]|$)"),
+    ("instahyre", r"instahyre\.com/job-(\d{4,})-"),
+]
 
 
 def config(path=CONFIG):
@@ -58,8 +78,36 @@ def resume(data_dir):
 
 
 def job_id(url):
-    m = re.search(r"(?:/jobs/view/(?:[^/?#]*?-)?|currentJobId=)(\d{6,})", url or "")
-    return m.group(1) if m else ""
+    """The board's id for a job link: LinkedIn's bare number, "<board>:<id>" for the other boards
+    (indeed:<jk>, naukri:<number>, ...); "" for a link that isn't a known board's job."""
+    for board, pattern in IDS:
+        m = re.search(pattern, url or "")
+        if m:
+            return f"{board}:{m.group(1)}" if board else m.group(1)
+    return ""
+
+
+def site(job):
+    """Which board a job came from: its "site", else read from its link ("other" when neither says)."""
+    named = (job.get("site") or "").strip().lower()
+    if named:
+        return named
+    host = re.sub(r"^https?://", "", job.get("url") or "").split("/")[0].lower()
+    for key in SITES:
+        if key in host:
+            return key
+    return "other"
+
+
+def site_name(key):
+    return SITES.get(key) or ("Other sites" if key == "other" else key.title())
+
+
+def by_site(jobs):
+    """The jobs grouped by board, boards in SITES order (others after), each group in the given order."""
+    order = list(SITES) + sorted({site(j) for j in jobs} - set(SITES) - {"other"}) + ["other"]
+    groups = [(key, [j for j in jobs if site(j) == key]) for key in order]
+    return [(key, js) for key, js in groups if js]
 
 
 def norm(text):
@@ -96,7 +144,7 @@ def split(jobs, applied, seen):
     out = {"new": [], "applied": [], "seen": []}
     kept = []
     for job in jobs:
-        job = dict(job, job_id=job.get("job_id") or job_id(job.get("url", "")))
+        job = dict(job, job_id=job.get("job_id") or job_id(job.get("url", "")), site=site(job))
         if any(same(job, k) for k in kept):
             continue
         kept.append(job)
@@ -135,11 +183,11 @@ def render(groups, today, profile_note=""):
               f"{len(groups['applied'])} skipped as already applied.", ""]
 
     def job_block(n, j, extra=""):
-        head = f"## {n}. {j.get('title', '?')} - {j.get('company', '?')}"
+        head = f"### {n}. {j.get('title', '?')} - {j.get('company', '?')}"
         if j.get("score") not in (None, ""):
             head += f"  ({j['score']}/100)"
         out = [head + extra, "", j.get("url", "")]
-        meta = [x for x in (j.get("location"), j.get("workplace"), j.get("posted")) if x]
+        meta = [x for x in (j.get("location"), j.get("workplace"), j.get("experience"), j.get("posted")) if x]
         if j.get("easy_apply"):
             meta.append("Easy Apply")
         if meta:
@@ -156,15 +204,15 @@ def render(groups, today, profile_note=""):
             out.append("")
         return out
 
-    n = 0
-    for j in groups["new"]:
-        n += 1
-        lines += job_block(n, j)
-    if groups["seen"]:
-        lines += ["---", "", "# Shown before, not applied yet", ""]
-        for j in groups["seen"]:
-            n += 1
-            lines += job_block(n, j, f"  _(first shown {j.get('seen_on', '')})_")
+    for title, jobs in (("", groups["new"]), ("Shown before, not applied yet", groups["seen"])):
+        if not jobs:
+            continue
+        if title:
+            lines += ["---", "", f"# {title}", ""]
+        for key, js in by_site(jobs):
+            lines += [f"## {site_name(key)} ({len(js)})", ""]
+            for j in js:
+                lines += job_block(j["n"], j, f"  _(first shown {j['seen_on']})_" if j.get("seen_on") else "")
     if groups["applied"]:
         lines += ["---", "", "# Skipped: already applied", ""]
         lines += [f"- {j.get('title')} - {j.get('company')} (applied {j.get('applied_on', '')})"
@@ -173,35 +221,70 @@ def render(groups, today, profile_note=""):
     return "\n".join(lines)
 
 
+def number(groups):
+    """Number the report's jobs in the order it shows them: new before shown-before, then by board,
+    best first within a board. The numbers go in the report's .json as "n"."""
+    n = 0
+    for key in ("new", "seen"):
+        for _, js in by_site(groups.get(key, [])):
+            for j in js:
+                n += 1
+                j["n"] = n
+    return groups
+
+
+def pick(groups, top):
+    """The jobs a message shows: the best `top` (new before shown-before, best first), grouped by board
+    and numbered 1.. in that order, so the numbers the candidate sees run straight down the message."""
+    best = (sorted(groups.get("new", []), key=lambda j: -float(j.get("score") or 0))
+            + sorted(groups.get("seen", []), key=lambda j: -float(j.get("score") or 0)))[:top]
+    out, n = [], 0
+    for _, js in by_site(best):
+        for j in js:
+            n += 1
+            out.append(dict(j, shown_n=n))
+    return out
+
+
 def chat_message(groups, day, top=10, tip=""):
-    """The report's jobs as a chat message: WhatsApp formatting (*bold*), one block per job, links in full."""
-    jobs = (groups.get("new", []) + groups.get("seen", []))[:top]
+    """The report's jobs as a chat message: WhatsApp formatting (*bold*), grouped under the board each
+    job is on (a heading per board), one block per job, links in full."""
+    jobs = pick(groups, top)
     if not jobs:
         return ""
     when = dt.date.fromisoformat(day).strftime("%-d %b") if re.fullmatch(r"\d{4}-\d{2}-\d{2}", day) else day
-    out = [f"*💼 Jobs for you - {when}*", "Roles that match your resume. Best ones first.", "", "━━━━━━━━━━━━━━━"]
-    for n, j in enumerate(jobs, 1):
-        out.append(f"*{n}. {j.get('title', '?')} - {j.get('company', '?')}*")
-        place = " · ".join(x for x in (j.get("location"), j.get("workplace")) if x)
-        if j.get("easy_apply"):
-            place = (place + " · " if place else "") + "⚡ Easy Apply"
-        if place:
-            out.append(f"📍 {place}")
-        if j.get("why"):
-            out.append("✅ " + "; ".join(j["why"][:2]))
-        if j.get("gaps"):
-            out.append("⚠️ " + "; ".join(j["gaps"][:2]))
-        if j.get("url"):
-            out.append(f"🔗 {j['url']}")
-        for c in (j.get("contacts") or [])[:2]:
-            who = c.get("name", "?") + (f" - {c['role']}" if c.get("role") else "")
-            out.append(f"👤 {who}")
-            out += [x for x in (c.get("profile"), c.get("email")) if x]
-        out.append("")
+    out = [f"*💼 Jobs for you - {when}*", "Roles that match your resume, grouped by the site to apply on. "
+           "Best ones first.", ""]
+    for key, js in by_site(jobs):
+        out += ["━━━━━━━━━━━━━━━", f"*🌐 {site_name(key).upper()}* ({len(js)})", ""]
+        for j in js:
+            out += job_lines(j)
     out[-1] = "━━━━━━━━━━━━━━━"
     if tip:
         out += ["", f"*👉 Tip:* {tip}"]
     return "\n".join(out)
+
+
+def job_lines(j):
+    """One job's block in a chat message, ending in a blank line."""
+    out = [f"*{j['shown_n']}. {j.get('title', '?')} - {j.get('company', '?')}*"]
+    place = " · ".join(x for x in (j.get("location"), j.get("workplace"), j.get("experience")) if x)
+    if j.get("easy_apply"):
+        place = (place + " · " if place else "") + "⚡ Easy Apply"
+    if place:
+        out.append(f"📍 {place}")
+    if j.get("why"):
+        out.append("✅ " + "; ".join(j["why"][:2]))
+    if j.get("gaps"):
+        out.append("⚠️ " + "; ".join(j["gaps"][:2]))
+    if j.get("url"):
+        out.append(f"🔗 {j['url']}")
+    for c in (j.get("contacts") or [])[:2]:
+        who = c.get("name", "?") + (f" - {c['role']}" if c.get("role") else "")
+        out.append(f"👤 {who}")
+        out += [x for x in (c.get("profile"), c.get("email")) if x]
+    out.append("")
+    return out
 
 
 def latest_report(reports):
@@ -277,6 +360,7 @@ def main(argv=None):
         if a.cmd == "filter":
             print(json.dumps(groups, indent=2))
             return 0
+        number(groups)
         path = report_path(p["reports"], today)
         with open(path, "w", encoding="utf-8") as f:
             f.write(render(groups, today, a.note))
@@ -295,6 +379,11 @@ def main(argv=None):
         text = chat_message(groups, groups.get("date", ""), a.top, a.tip)
         if not text:
             sys.exit(f"no jobs in {src}")
+        # Keep what the message numbered, so "she applied to 2 and 5" finds the right jobs.
+        groups["shown"] = [{k: j.get(k, "") for k in ("shown_n", "site", "company", "title", "url")}
+                           for j in pick(groups, a.top)]
+        with open(src, "w", encoding="utf-8") as f:
+            json.dump(groups, f, indent=2, ensure_ascii=False)
         print(text)
         return 0
 

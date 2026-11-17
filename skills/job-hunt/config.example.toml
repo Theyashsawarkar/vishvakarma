@@ -4,6 +4,13 @@
 # Where the resume, the applied and shown lists, the profile and the reports live.
 data_dir = "~/Documents/job-hunt"
 
+# The job boards searched each run, in this order (all nine by default; drop the ones that don't fit).
+# Each is used signed in, in the Chrome the skill works in.
+# sites = ["linkedin", "indeed", "naukri", "hirist", "cutshort", "wellfound", "internshala", "foundit", "instahyre"]
+# The boards where the signed-in account is the candidate's own (their resume), so the board's own
+# picks for that profile (Instahyre's Opportunities, Naukri's recommended jobs...) are theirs.
+# candidate_accounts = []
+
 # What to search for. Empty: taken from the resume's profile.
 # roles = ["Backend Engineer", "Node.js Developer"]
 # locations = ["Pune, Maharashtra, India", "India"]
@@ -16,7 +23,7 @@ data_dir = "~/Documents/job-hunt"
 # exclude_companies = ["Current Employer"]
 # exclude_title_words = ["intern", "principal"]
 
-# How much one run does. LinkedIn watches for automated browsing, so keep these modest.
-# max_jobs_opened = 25      # job pages read in one run
+# How much one run does. Every board watches for automated browsing, so keep these modest.
+# max_jobs_opened = 25      # job pages read in one run, shared across the boards
 # show_top = 10             # jobs in the report
 # min_score = 60            # below this a job is left out

@@ -1,0 +1,29 @@
+# Copy to ~/.config/vishvakarma/network.toml and change what differs for you.
+# Everything is optional: without it the skill works the profile out from your own LinkedIn page.
+
+# Where the ledger (contacted.csv), the profile and the reports live.
+data_dir = "~/Documents/network"
+
+# What you're after, in a sentence: it steers who is found and how notes are written.
+# goal = "A full-stack (MERN) role at a startup, or a remote job"
+# Fields you want to work in. Founders building well in these are reached even when not hiring.
+# interests = ["GenAI", "AI agents", "LLM applications"]
+# github = "your-github-user"
+# x_handle = "your_handle"
+
+# Who to look for: any of founder, recruiter, engineer, community.
+# categories = ["founder", "recruiter", "engineer", "community"]
+
+# Never contact these: your current employer's people, and anyone named here (profile URL or @handle).
+# exclude_companies = ["Current Employer"]
+# exclude_people = ["https://www.linkedin.com/in/someone/", "@someone"]
+
+# Limits. LinkedIn restricts accounts that send too many requests: stay well under its ~100 a week.
+# linkedin_per_run = 15
+# linkedin_per_day = 20
+# linkedin_per_week = 80
+# notes_per_month = 5      # Free accounts get only a few personalised notes a month; Premium: raise it
+# note_chars = 200         # Free: 200, Premium: 300
+# x_per_run = 15
+# x_per_day = 25
+# min_score = 55           # people under this are not contacted
