@@ -2,7 +2,7 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
-## Unreleased
+## v0.6.0 -- 2026-11-17
 
 - `job-hunt` searches eight more boards besides LinkedIn: **Indeed** and **Naukri**, plus **Hirist** (tech-only), **Cutshort** and **Wellfound** (startups), **Internshala** (fresher and 0-2 year jobs), **foundit** (ex-Monster India) and **Instahyre** (curated, matched to the profile). They are listed as `sites` in `job-hunt.toml`, all nine by default.
   - Every board is used signed in. Each run checks the sign-ins first and asks the user to sign in where needed; it never types a password or code. A board's own picks for the signed-in profile (Instahyre's Opportunities, Naukri's recommended jobs, LinkedIn's top picks) are read only where that account is the candidate's (`candidate_accounts`).
