@@ -21,7 +21,8 @@ pass `tab` explicitly after the first) and `sutradhar tools` lists them.
    `sutradhar doctor`); don't retry in a loop.
 2. `navigate {"url": "…"}` opens a tab in your own tab group if you have none,
    and waits for the load. `tab_open` for a second tab.
-3. `snapshot` reads the page.
+3. `snapshot` reads the page. If `navigate` printed **notes for this site**
+   from earlier runs, follow them: they say how a flow worked there.
 
 ## The loop: snapshot → act → snapshot
 
@@ -152,7 +153,27 @@ name: don't put your name in `why` either, just the request.
 - `page_pdf` saves the page as PDF; `record start` / `record stop` makes a
   GIF of what you did (good for showing the user a flow).
 
-## Stop
+## Remember what worked
+
+After a flow that took figuring out on a site (where the button really is,
+which editor, what to avoid), save one short recipe with
+`site_notes {"add": "…"}`: steps and control names, no personal data. The next
+run gets it with `navigate`. Remove a note that turned out wrong
+(`site_notes {"remove": 2}`).
+
+## Testing a site
+
+`network_rules` blocks a request, redirects it, or answers it with a made-up
+response (`{"action": "add", "rule": {"match": "/api/cart", "type": "mock",
+"body": "{\"items\": []}"}}`), in your tab only. `clear` when done.
+`record` films your tab (pointer and captions included) as a GIF or WebM.
+
+## Pause and Stop
+
+The user can **Pause** and take over: your calls then wait (they don't fail)
+until they hand back, so don't retry or work around a slow call.
+
+
 
 The user can stop every agent at once (toolbar, the page's Stop button,
 Super+Shift+Delete in Vayu, `sutradhar stop`). After that every call fails
