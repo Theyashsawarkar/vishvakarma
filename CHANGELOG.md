@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.9.1 -- 2026-11-23
+
+- The `sutradhar` skill: work in the background sutra group (bring a tab forward only when the user asks to watch); the last tab is parked on sutradhar's idle page and reused.
+
 ## v0.9.0 -- 2026-11-23
 
 - `post-about-tool` publishes through **sutradhar**, in the user's own browser where they're signed in to LinkedIn and X, instead of vaikhari: composing, attaching images (no file picker opens) and posting on each site, scheduling with each site's own scheduler, and `scripts/check.py` for X's weighted length, the thread split and LinkedIn's "see more" fold.

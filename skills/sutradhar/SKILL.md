@@ -115,7 +115,12 @@ name: don't put your name in `why` either, just the request.
   new-tab links opened from them. `tabs` marks them `[yours]`.
 - The user's own tabs are off limits. If the task needs one ("the page I have
   open"), ask with `tab_attach {"tab": 12, "why": "…"}`; they approve it.
-- Close tabs you no longer need with `tab_close`; leave the user's alone.
+- You work in the **sutra** tab group, in the background: never bring a tab to
+  the front (`tab_focus`) unless the user asks to watch. They can open the
+  group, or press "Watch it work" in the panel, to see you.
+- Close tabs you no longer need with `tab_close`; the last one is parked on
+  sutradhar's idle page (so the group stays) and reused by `tab_open` /
+  `navigate`. Leave the user's tabs alone.
 
 ## Pages that fight back
 
