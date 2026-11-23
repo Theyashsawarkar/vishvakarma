@@ -100,11 +100,14 @@ in chat, and never try to get around a refusal (other fields, JavaScript,
 
 ## Approvals
 
-These wait for the user's **Allow** and then run: clicking send, publish,
-post, delete, merge, accept, book and similar buttons; `eval_js`; `cookies`;
-`clipboard` reads; `tab_attach`; `os_input`. A result of `denied` means no:
-don't retry it, say so. The user can allow a site for good from the toolbar
-panel; don't ask them to.
+By default nothing but the user's-turn steps above waits for the user: send,
+publish, delete, `eval_js`, `cookies`, `clipboard` reads, `tab_attach` and
+`os_input` go ahead. A user can turn approvals on (everywhere, or for one
+site); then those steps wait for **Allow**, and `denied` means no: don't
+retry it, say so.
+
+The user sees "sutradhar is working here" and a moving pointer, never your
+name: don't put your name in `why` either, just the request.
 
 ## Tabs
 
@@ -135,7 +138,10 @@ panel; don't ask them to.
 ## Files
 
 - Upload: `{"do": "upload", "ref": "e8", "paths": ["/abs/path/file.pdf"]}`
-  (inputs and drop zones alike). Only files the user asked you to use.
+  on a file input, a drop zone, or the button that would open a file picker
+  ("Add photo", "Attach"): the page gets the files and no picker opens. Never
+  click such a button on its own (a system picker would open). Only files the
+  user asked you to use.
 - Download: click the link, then `wait_for {"download": true}`, then
   `downloads {"action": "read"}` for text, JSON and PDFs.
 - `page_pdf` saves the page as PDF; `record start` / `record stop` makes a

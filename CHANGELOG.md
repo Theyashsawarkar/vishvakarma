@@ -2,6 +2,12 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.9.0 -- 2026-11-23
+
+- `post-about-tool` publishes through **sutradhar**, in the user's own browser where they're signed in to LinkedIn and X, instead of vaikhari: composing, attaching images (no file picker opens) and posting on each site, scheduling with each site's own scheduler, and `scripts/check.py` for X's weighted length, the thread split and LinkedIn's "see more" fold.
+- vaikhari's MCP server is gone from the store (vaikhari is retired; sutradhar does its job).
+- The `sutradhar` skill: approvals are off by default (only payments, passwords, OTPs and CAPTCHAs wait for the user); upload through a page's "add photo" button.
+
 ## v0.8.0 -- 2026-11-23
 
 - New skill `sutradhar`: how agents use the user's real browser through sutradhar: the snapshot → act loop with refs, frames and shadow DOM, forms, files, dialogs, waits, the steps that are always the user's (payments, passwords, OTPs, CAPTCHAs) and what to do when one is handed to them, approvals, Stop, real mouse and keyboard, and `sutradhar call` for agents without MCP.
