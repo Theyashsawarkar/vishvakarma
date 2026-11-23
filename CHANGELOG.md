@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.9.3 -- 2026-11-23
+
+- The `sutradhar` skill covers site recipes (`site_notes`), network rules for testing, replays, and Pause (calls wait while the user has control). `post-about-tool` follows each site's recipe first. (The v0.9.2 tag carries part of this with the version still reading 0.9.1; use 0.9.3.)
+
 ## v0.9.1 -- 2026-11-23
 
 - The `sutradhar` skill: work in the background sutra group (bring a tab forward only when the user asks to watch); the last tab is parked on sutradhar's idle page and reused.

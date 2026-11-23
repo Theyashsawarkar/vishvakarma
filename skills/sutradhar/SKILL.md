@@ -173,9 +173,7 @@ response (`{"action": "add", "rule": {"match": "/api/cart", "type": "mock",
 The user can **Pause** and take over: your calls then wait (they don't fail)
 until they hand back, so don't retry or work around a slow call.
 
-
-
-The user can stop every agent at once (toolbar, the page's Stop button,
+The user can also stop every agent at once (toolbar, the page's Stop button,
 Super+Shift+Delete in Vayu, `sutradhar stop`). After that every call fails
 with "The user pressed Stop": stop, tell them where you were, and wait. Never
 try to resume yourself.

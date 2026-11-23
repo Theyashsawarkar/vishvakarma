@@ -99,6 +99,9 @@ already said to go ahead: sutradhar doesn't ask before a Post click.
 
 ## 5. Publish
 
+`navigate` shows sutradhar's notes for each site from earlier posts: follow
+them first. If a site changed, update the note (`site_notes`) after posting.
+
 Do one site at a time, and take a fresh `snapshot` before each step: these
 sites change their markup often, so find controls by their names, never by
 remembered refs or selectors.
