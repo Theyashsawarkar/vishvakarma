@@ -17,7 +17,8 @@ from vishvakarma.store import frontmatter  # noqa: E402
 class Home:
     """A throwaway HOME with fake `claude`, `codex`, `opencode` and tool commands on PATH."""
 
-    def __init__(self, commands=("claude", "codex", "opencode", "narada", "sangam", "ekatva", "dvarapala", "vaikhari", "darshan", "sutradhar")):
+    def __init__(self, commands=("claude", "codex", "opencode", "narada", "sangam", "ekatva", "dvarapala", "vaikhari",
+                                 "darshan", "sutradhar")):
         self.dir = tempfile.mkdtemp()
         self.bin = os.path.join(self.dir, "fakebin")
         os.makedirs(self.bin)

@@ -1,2 +1,2 @@
 """vishvakarma: skills and tools for every AI agent on this machine."""
-VERSION = "0.7.0"
+VERSION = "0.8.0"

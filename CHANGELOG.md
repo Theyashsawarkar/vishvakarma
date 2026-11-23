@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.8.0 -- 2026-11-23
+
+- New skill `sutradhar`: how agents use the user's real browser through sutradhar: the snapshot → act loop with refs, frames and shadow DOM, forms, files, dialogs, waits, the steps that are always the user's (payments, passwords, OTPs, CAPTCHAs) and what to do when one is handed to them, approvals, Stop, real mouse and keyboard, and `sutradhar call` for agents without MCP.
+
 ## v0.7.0 -- 2026-11-23
 
 - Every agent gets **sutradhar**'s MCP server (`sutradhar mcp --name <agent>`): the user's real browser (Chrome, Firefox, Zen), with payments, passwords and OTPs handed to the user.
