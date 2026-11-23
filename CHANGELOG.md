@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## v0.7.0 -- 2026-11-23
+
+- Every agent gets **sutradhar**'s MCP server (`sutradhar mcp --name <agent>`): the user's real browser (Chrome, Firefox, Zen), with payments, passwords and OTPs handed to the user.
+
 ## v0.6.0 -- 2026-11-17
 
 - `job-hunt` searches eight more boards besides LinkedIn: **Indeed** and **Naukri**, plus **Hirist** (tech-only), **Cutshort** and **Wellfound** (startups), **Internshala** (fresher and 0-2 year jobs), **foundit** (ex-Monster India) and **Instahyre** (curated, matched to the profile). They are listed as `sites` in `job-hunt.toml`, all nine by default.

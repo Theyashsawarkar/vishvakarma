@@ -33,3 +33,8 @@ args = ["mcp"]
 description = "The user's GitHub pull requests: list, read, diff; comment, review and merge after the user approves"
 command = "sangam"
 args = ["mcp"]
+
+[servers.sutradhar]
+description = "The user's real browser (Chrome, Firefox, Zen): open tabs, read pages, click, type, upload, download like they do; payments, passwords and OTPs are handed to the user"
+command = "sutradhar"
+args = ["mcp", "--name", "{agent}"]
