@@ -1,6 +1,6 @@
 ---
 name: tool-identity
-description: Give a Vayu tool its identity and its screen's manners - a Sanskrit name, a logo, a real Sanskrit shloka as its tag, colour that means something, rounded corners, and forms that can't be changed by accident. Use whenever creating, renaming or publishing a Vayu tool, building or changing its screen, writing or changing its README, website, site.toml, logo or about screen, or checking a tool against these rules.
+description: Give a Vayu tool its identity and its screen's manners - a Sanskrit name, a logo, a real Sanskrit shloka as its tag, the Spatial look (graphite glass, very round, near-white where you are), colour that means something, rounded corners, and forms that can't be changed by accident. Use whenever creating, renaming or publishing a Vayu tool, building or changing its screen, writing or changing its README, website, site.toml, logo or about screen, or checking a tool against these rules.
 ---
 
 # A tool's identity
@@ -52,10 +52,19 @@ the theme's colours, never hard-coded ones, and always for the same meanings:
 - yellow: waiting on you, not saved
 - peach: what to look for or copy, what an agent wants
 - blue and sky: networks and accounts, links
-- the accent: where you are now
+- the accent (near-white in Vayu): where you are now
 - muted: what's secondary
 
 Leave ordinary text alone: when everything is coloured, nothing stands out.
+
+**The Spatial look.** Every Vayu screen and website is graphite glass that
+floats: the theme's glass with a faint white lift, a 1 px light hairline and a lit
+top edge, over the compositor's blur; very round (28 px panels, 18-24 px cards and
+rows, pills for buttons, inputs, tabs, chips and sliders, icons in circles); where
+you are is brighter glass with a light rim, or a near-white pill with dark text for
+the one current thing, never a coloured left bar; no glows; sentence case, no
+all-caps labels. Vyom's `style.css` is the reference; the websites get it from the
+shared `scripts/build-site.py` (copy it from any tool, don't restyle per site).
 
 **Every corner is rounded.** Frames, cards, bubbles, popups, buttons, progress bars
 and website boxes. In a terminal use `╭╮╰╯`, even beside heavy lines (`━┃`): Unicode

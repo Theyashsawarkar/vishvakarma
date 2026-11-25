@@ -4,6 +4,7 @@ Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init_
 
 ## Unreleased
 
+- tool-identity: every screen and website follows **the Spatial look** (Vayu's design since 2026-11-25): graphite glass with a lit top edge, very round, near-white where you are, no glows, no all-caps labels.
 - The website has Vayu's Spatial look: graphite glass, a floating navigation bar, near-white for links and the main button, and the tool's own colour only as its signature (the logo's glow, the shloka's line, the release dots). No more all-caps labels.
 
 ## v0.9.3 -- 2026-11-23

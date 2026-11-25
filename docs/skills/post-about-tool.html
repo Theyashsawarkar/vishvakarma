@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>post-about-tool · vishvakarma skills</title>
+<meta name="description" content="Every skill and tool, in every AI agent: Claude Code on every account, Codex, opencode, Gemini CLI, in every session.">
+<meta property="og:title" content="post-about-tool · vishvakarma skills">
+<meta property="og:description" content="Every skill and tool, in every AI agent: Claude Code on every account, Codex, opencode, Gemini CLI, in every session.">
+<meta name="theme-color" content="#0e0f11">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<style>:root{--tool:#f3d47f;--glow:#f3d47f2e}</style>
+</head>
+<body>
+<header class="top"><div class="in">
+<a class="brand" href="../index.html"><img src="../assets/logo.svg" alt=""><span>vishvakarma <small>विश्वकर्मा</small></span></a>
+<nav><a href="../index.html" class="">Overview</a><a href="../changelog.html" class="">Changelog</a><a href="../adr/index.html" class=" hide">Decisions</a><a href="../skills/index.html" class="on">Skills</a><a class="gh" href="https://github.com/Theyashsawarkar/vishvakarma">GitHub ↗</a></nav></div></header>
+
+<div class="wrap"><aside class="toc"></aside><article>
+<p class="n"><a href="index.html">← All skills</a></p><h2><code>post-about-tool</code></h2><p class="lead">Write and publish a social post (LinkedIn, X) about a tool, project or anything else with something to show, with its image attached, through the user&#x27;s own browser with sutradhar. Use whenever the user asks to post, announce, share or write about a tool or project on LinkedIn or X. Covers getting the facts, finding or taking the image (never from the user&#x27;s real data or desktop), checking lengths and the &quot;see more&quot; fold with scripts/check.py, and composing, attaching and publishing on each site.</p><blockquote><p><b>Use it</b>: ask any agent in your own words. It picks this skill by the description above, opens these instructions and follows them. Already in every agent vishvakarma syncs.</p></blockquote><h3>Files</h3><ul><li><a href="https://github.com/Theyashsawarkar/vishvakarma/blob/main/skills/post-about-tool/SKILL.md"><code>SKILL.md</code></a> the instructions</li><li><a href="https://github.com/Theyashsawarkar/vishvakarma/blob/main/skills/post-about-tool/scripts/check.py"><code>scripts/check.py</code></a></li></ul><h2 id="posting-about-a-tool"><a class="anchor" href="#posting-about-a-tool">#</a>Posting about a tool</h2>
+<p>A post about something should show it. Attach the associated image whenever one can exist; post without one only if the user says so or nothing can be shown, and say so when you do.</p>
+<p>Posts go out through <strong>sutradhar</strong>, in the user's own browser where they are signed in to LinkedIn and X. Read the <code>sutradhar</code> skill first if you haven't: the snapshot → act loop, refs, uploads and approvals are explained there.</p>
+<h3 id="1-check-it-can-go-out"><a class="anchor" href="#1-check-it-can-go-out">#</a>1. Check it can go out</h3>
+<p><code>browsers</code> must show a connected browser. Open each site (<code>navigate</code> to <code>https://www.linkedin.com/feed/</code> and <code>https://x.com/home</code>) and <code>snapshot</code>: if a sign-in page shows, <code>handoff {&quot;task&quot;: &quot;Sign in to LinkedIn&quot;, &quot;why&quot;: &quot;…&quot;}</code> and wait. Never type the user's password or codes.</p>
+<h3 id="2-get-the-facts"><a class="anchor" href="#2-get-the-facts">#</a>2. Get the facts</h3>
+<p>Read the tool's README. Every claim in the post must be true of the tool as it is now, down to defaults and numbers. Anything written as the user's personal experience is your guess: point it out so they can change it.</p>
+<p>Lead with what makes the tool what it is. If agents can use it (an MCP server), the post says so plainly: Vayu's tools are agent-first.</p>
+<h3 id="3-get-the-image"><a class="anchor" href="#3-get-the-image">#</a>3. Get the image</h3>
+<p>Public posts must never show real data: no real mail, names, messages, repos, clients, accounts or desktops.</p>
+<ul><li><strong>A terminal tool</strong>: run it in its own big terminal and shoot that, so it reads well on a phone: 1920x1080, a font around 13pt. Use its demo mode (<code>&lt;tool&gt; demo</code>) or made-up data. Never shoot the user's desktop or their own session of the tool.</li><li><strong>A GUI, website, browser extension or phone app</strong>: its demo mode, a demo page with made-up content, or public-domain content. A browser tool is shot in a throwaway headless browser profile (the tool's own test harness, if it has one), never the user's browser. On a phone, only with the user's agreement to use it.</li><li><strong>A diagram</strong> from the tool's README (<code>assets/diagrams/</code>) makes a good second image; render its SVG to PNG (<code>rsvg-convert -w 2000</code>).</li><li><strong>Otherwise</strong>: the tool's <code>assets/screenshots/</code>, if they're current; else its logo.</li></ul>
+<p>Shoot on a private headless screen, never on the user's live desktop. The order of these lines matters: the runtime folder is set BEFORE the private bus starts, or its services overwrite the user's real accessibility bus.</p>
+<pre class="code" data-lang="sh"><code>export XDG_RUNTIME_DIR=/run/user/$UID/vs      # short: sway&#x27;s socket path must fit
+rm -rf &quot;$XDG_RUNTIME_DIR&quot;; mkdir -m700 -p &quot;$XDG_RUNTIME_DIR&quot;
+unset SWAYSOCK I3SOCK WAYLAND_DISPLAY DISPLAY LD_PRELOAD TMUX TMUX_PANE
+export WLR_BACKENDS=headless WLR_LIBINPUT_NO_DEVICES=1 WLR_RENDERER=pixman
+export GTK_A11Y=none NO_AT_BRIDGE=1 GDK_DEBUG=no-portals GTK_USE_PORTAL=0
+cat &gt; &quot;$XDG_RUNTIME_DIR/cfg&quot; &lt;&lt;CFG
+output HEADLESS-1 resolution 1920x1080 scale 1
+default_border none
+exec kitty -o font_size=13 -o window_padding_width=12 &lt;tool&gt; demo
+CFG
+dbus-run-session -- sh -c &#x27;
+  sway -c &quot;$XDG_RUNTIME_DIR/cfg&quot; &amp; pid=$!
+  sleep 5
+  WAYLAND_DISPLAY=$(ls &quot;$XDG_RUNTIME_DIR&quot; | grep -m1 &quot;^wayland-[0-9]*$&quot;) grim &quot;$OUT&quot;
+  kill $pid&#x27;
+rm -rf &quot;$XDG_RUNTIME_DIR&quot;</code></pre>
+<p>Set <code>OUT</code> to an absolute path. Never run a bare <code>swaymsg</code> or <code>pkill sway</code> here: they can reach the user's real desktop. Keep the image somewhere that lasts until the post goes out (<code>~/Pictures/&lt;tool&gt;-post/</code>), not a temporary folder.</p>
+<p><strong>Look at the image before attaching it</strong>, every time. Read every name and line in it. If anything could be real, don't use it.</p>
+<h3 id="4-write-it-and-check-it"><a class="anchor" href="#4-write-it-and-check-it">#</a>4. Write it and check it</h3>
+<p>Write in the user's voice, and always use emojis: they make a post easier to read and catch the eye. Open with one, and start each list item or short section with one that suits it (not a row of them, and not one on every sentence).</p>
+<p>Write one text for LinkedIn (up to 3000 characters; the first ~210 characters or 3 lines show before "…see more", so the opening has to earn the click) and a shorter one for X (280 weighted characters; emoji count 2, links 23). Save each to a file and check it:</p>
+<pre class="code" data-lang="sh"><code>python3 scripts/check.py linkedin.txt --linkedin
+python3 scripts/check.py x.txt --x       # too long: it shows the thread split (&quot;---&quot; forces a break)</code></pre>
+<p>Show the user both texts (and the images) before publishing, unless they already said to go ahead: sutradhar doesn't ask before a Post click.</p>
+<h3 id="5-publish"><a class="anchor" href="#5-publish">#</a>5. Publish</h3>
+<p><code>navigate</code> shows sutradhar's notes for each site from earlier posts: follow them first. If a site changed, update the note (<code>site_notes</code>) after posting.</p>
+<p>Do one site at a time, and take a fresh <code>snapshot</code> before each step: these sites change their markup often, so find controls by their names, never by remembered refs or selectors.</p>
+<p><strong>LinkedIn</strong> (<code>https://www.linkedin.com/feed/</code>):</p>
+<ol><li><code>act</code> click <strong>Start a post</strong>; a dialog opens with the editor (a <code>textbox</code>, often named "Text editor for creating content").</li><li><code>act</code> type the text into the editor (one <code>type</code> step; <code>\n</code> makes new lines).</li><li>Attach the images: <code>upload</code> with the composer's media button as the target (<code>{&quot;do&quot;: &quot;upload&quot;, &quot;ref&quot;: &quot;…&quot;, &quot;paths&quot;: [...]}</code>); sutradhar hands the page the files and no file picker opens. The button is an unlabelled icon beside the emoji button; if <code>find</code> can't name it, target it by <code>x</code>/<code>y</code> from a <code>screenshot</code> (scale the screenshot's pixels to the viewport's). A link in the text makes LinkedIn show a link preview and hide the media buttons: attach the images first, or remove the preview (its ✕). Then press <strong>Next</strong> / <strong>Done</strong> in the image editor if it shows.</li><li><code>snapshot</code> the dialog and check the text and images are there.</li><li><code>act</code> click <strong>Post</strong> with a <code>why</code>.</li><li>Find the new post's link (the "View post" toast, or the first post on your profile's activity page) for the user.</li></ol>
+<p><strong>X</strong> (<code>https://x.com/compose/post</code>):</p>
+<ol><li>The composer is a <code>textbox</code> ("Post text"). <code>act</code> type the text.</li><li>Images: <code>upload</code> onto the composer's <code>input[type=file]</code> (up to 4).</li><li>A thread: after the first post's text, click <strong>Add post</strong> (the "+"), then type the next one into the new textbox; repeat.</li><li><code>snapshot</code> and check; then click <strong>Post</strong> (or <strong>Post all</strong>) with a <code>why</code>.</li><li>Open the post from your profile (<code>https://x.com/&lt;handle&gt;</code>) for its link.</li></ol>
+<p>To schedule instead of posting now, use the site's own schedule control in the composer (LinkedIn: the clock beside Post; X: the calendar icon) and say the time to the user.</p>
+<p>Never claim a post went out unless the click returned <code>ok</code> and you saw the post; give the user its link. If a site shows an error, a CAPTCHA or a "verify it's you" page, <code>handoff</code> it to the user.</p>
+</article></div>
+<footer><div class="in"><div><h4>Desktop</h4><a href="https://vayu.theyashsawarkar.dev/" class="">vayu <span>वायु · the keyboard-driven Wayland desktop</span></a></div><div><h4>Apps</h4><a href="https://kosha.theyashsawarkar.dev/" class="">kosha <span>कोश · package manager</span></a><a href="https://nada.theyashsawarkar.dev/" class="">nada <span>नाद · music player</span></a><a href="https://drishya.theyashsawarkar.dev/" class="">drishya <span>दृश्य · video player</span></a><a href="https://darshan.theyashsawarkar.dev/" class="">darshan <span>दर्शन · document viewer</span></a><a href="https://sangam.theyashsawarkar.dev/" class="">sangam <span>संगम · pull requests in the terminal</span></a><a href="https://narada.theyashsawarkar.dev/" class="">narada <span>नारद · mail and chat in the terminal</span></a><a href="https://pattan.theyashsawarkar.dev/" class="">pattan <span>पत्तन · ports and tunnels</span></a><a href="https://nauka.theyashsawarkar.dev/" class="">nauka <span>नौका · Docker in the terminal</span></a><a href="https://vaikhari.theyashsawarkar.dev/" class="">vaikhari <span>वैखरी · posts to X and LinkedIn</span></a><a href="https://dvarapala.theyashsawarkar.dev/" class="">dvarapala <span>द्वारपाल · commands for AI agents, approved</span></a><a href="https://pramana.theyashsawarkar.dev/" class="">pramana <span>प्रमाण · password prompts</span></a><a href="https://vesha.theyashsawarkar.dev/" class="">vesha <span>वेष · Claude Code accounts</span></a><a href="https://vishvakarma.theyashsawarkar.dev/" class="me">vishvakarma <span>विश्वकर्मा · skills for every AI agent</span></a><a href="https://sutradhar.theyashsawarkar.dev/" class="">sutradhar <span>सूत्रधार · browser hands for AI agents</span></a><a href="https://ekatva.theyashsawarkar.dev/" class="">ekatva <span>एकत्व · phone and laptop, linked</span></a><a href="https://vagdevi.theyashsawarkar.dev/" class="">vagdevi <span>वाग्देवी · book reader for Android</span></a><a href="https://varna.theyashsawarkar.dev/" class="">varna <span>वर्ण · theme engine</span></a><a href="https://vinyasa.theyashsawarkar.dev/" class="">vinyasa <span>विन्यास · settings</span></a><a href="https://vyakarana.theyashsawarkar.dev/" class="">vyakarana <span>व्याकरण · key grammar</span></a></div><div><h4>Vyom</h4><a href="https://vyom.theyashsawarkar.dev/" class="">vyom <span>व्योम · panels runtime</span></a></div><div><h4>Vyom tools</h4><a href="https://dvara.theyashsawarkar.dev/" class="">dvara <span>द्वार · apps</span></a><a href="https://ganit.theyashsawarkar.dev/" class="">ganit <span>गणित · calculator</span></a><a href="https://smriti.theyashsawarkar.dev/" class="">smriti <span>स्मृति · clipboard</span></a><a href="https://bhava.theyashsawarkar.dev/" class="">bhava <span>भाव · emoji</span></a><a href="https://tarang.theyashsawarkar.dev/" class="">tarang <span>तरंग · Wi‑Fi</span></a><a href="https://setu.theyashsawarkar.dev/" class="">setu <span>सेतु · Bluetooth</span></a><a href="https://doot.theyashsawarkar.dev/" class="">doot <span>दूत · phone</span></a><a href="https://patra.theyashsawarkar.dev/" class="">patra <span>पात्र · Docker</span></a><a href="https://akashvani.theyashsawarkar.dev/" class="">akashvani <span>आकाशवाणी · notifications</span></a><a href="https://raga.theyashsawarkar.dev/" class="">raga <span>राग · YouTube</span></a><a href="https://mudra.theyashsawarkar.dev/" class="">mudra <span>मुद्रा · keybindings</span></a><a href="https://urja.theyashsawarkar.dev/" class="">urja <span>ऊर्जा · battery</span></a><a href="https://vishram.theyashsawarkar.dev/" class="">vishram <span>विश्राम · power menu</span></a><a href="https://kendra.theyashsawarkar.dev/" class="">kendra <span>केन्द्र · quick settings</span></a><a href="https://darpana.theyashsawarkar.dev/" class="">darpana <span>दर्पण · phone, mirrored</span></a></div></div>
+<div class="bottom">vishvakarma is free software under the MIT license · <a href="https://github.com/Theyashsawarkar/vishvakarma">source</a> · <a href="https://github.com/Theyashsawarkar/vishvakarma/issues">issues</a> · <a href="../changelog.html">changelog</a> · part of <a href="https://vayu.theyashsawarkar.dev/">Vayu</a></div></footer>
+<script>
+document.querySelectorAll('pre.code').forEach(p=>{const b=document.createElement('button');b.className='copy';b.textContent='Copy';
+b.onclick=()=>{navigator.clipboard.writeText(p.innerText.replace(/^Copy/,'')).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1200)})};p.appendChild(b)});
+const links=[...document.querySelectorAll('.toc a')];if(links.length){const hs=links.map(a=>document.getElementById(a.hash.slice(1))).filter(Boolean);
+const on=()=>{let cur=hs[0];for(const h of hs){if(h.getBoundingClientRect().top<120)cur=h}links.forEach(a=>a.classList.toggle('on',cur&&a.hash==='#'+cur.id))};
+addEventListener('scroll',on,{passive:true});on()}
+</script>
+</body>
+</html>
