@@ -2,6 +2,10 @@
 
 Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init__.py.
 
+## Unreleased
+
+- The website has Vayu's Spatial look: graphite glass, a floating navigation bar, near-white for links and the main button, and the tool's own colour only as its signature (the logo's glow, the shloka's line, the release dots). No more all-caps labels.
+
 ## v0.9.3 -- 2026-11-23
 
 - The `sutradhar` skill covers site recipes (`site_notes`), network rules for testing, replays, and Pause (calls wait while the user has control). `post-about-tool` follows each site's recipe first. (The v0.9.2 tag carries part of this with the version still reading 0.9.1; use 0.9.3.)
