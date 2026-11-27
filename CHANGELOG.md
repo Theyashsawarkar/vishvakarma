@@ -4,6 +4,8 @@ Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init_
 
 ## Unreleased
 
+- narada's MCP entry says it has WhatsApp too.
+- The website has its skill pages and Skills link again (it had last been built with `build-site.py` alone, which drops them), and `scripts/build-site.py` passes ruff (CI failed since 2026-11-25); the pages it writes are otherwise byte-for-byte the same.
 - The website, closer to Vayu's own: the tool's screenshot blurred behind the page, a centred hero with the logo and the verse, the page you're on as the white pill, glass "On this page" and footer panels, releases as cards. No glow behind the logo, no coloured line beside the verse.
 - tool-identity: every screen and website follows **the Spatial look** (Vayu's design since 2026-11-25): graphite glass with a lit top edge, very round, near-white where you are, no glows, no all-caps labels.
 - The website has Vayu's Spatial look: graphite glass, a floating navigation bar, near-white for links and the main button, and the tool's own colour only as its signature (the logo's glow, the shloka's line, the release dots). No more all-caps labels.

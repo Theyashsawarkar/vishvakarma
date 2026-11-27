@@ -20,7 +20,7 @@ args = ["mcp"]
 env = { EKATVA_AGENT = "{agent}" }
 
 [servers.narada]
-description = "The user's Gmail and Google Chat: list, search, read, draft and send (sends ask the user first; html for tables)"
+description = "The user's Gmail, Google Chat and WhatsApp: list, search, read, draft and send (sends ask the user first; html for tables)"
 command = "narada"
 args = ["mcp"]
 
