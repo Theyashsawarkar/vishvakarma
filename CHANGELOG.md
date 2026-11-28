@@ -4,6 +4,7 @@ Newest first. Releases are tags (`vX.Y.Z`) with `VERSION` in vishvakarma/__init_
 
 ## Unreleased
 
+- Website: pranali joins the family list in the footer; the site builder passes ruff.
 - narada's MCP entry says it has WhatsApp too.
 - The website has its skill pages and Skills link again (it had last been built with `build-site.py` alone, which drops them), and `scripts/build-site.py` passes ruff (CI failed since 2026-11-25); the pages it writes are otherwise byte-for-byte the same.
 - The website, closer to Vayu's own: the tool's screenshot blurred behind the page, a centred hero with the logo and the verse, the page you're on as the white pill, glass "On this page" and footer panels, releases as cards. No glow behind the logo, no coloured line beside the verse.
